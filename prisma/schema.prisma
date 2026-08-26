@@ -1,0 +1,306 @@
+// Prisma schema for Moadla Pro Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  passwordHash  String
+  role          String          @default("STUDENT") // STUDENT, ADMIN
+  phone         String?
+  bio           String?
+  avatar        String?
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  attempts      ExamAttempt[]
+  progress      LessonProgress[]
+  favorites     Favorite[]
+  notifications Notification[]
+  logs          ActivityLog[]
+}
+
+model Section {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  description String
+  icon        String?
+  color       String?   @default("blue")
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  subjects    Subject[]
+  exams       Exam[]
+}
+
+model Subject {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  description String
+  image       String?
+  sectionId   String
+  section     Section   @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  units       Unit[]
+  exams       Exam[]
+  files       LessonFile[]
+}
+
+model Unit {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  order       Int       @default(0)
+  subjectId   String
+  subject     Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  lessons     Lesson[]
+  files       LessonFile[]
+}
+
+model Lesson {
+  id              String           @id @default(cuid())
+  title           String
+  slug            String
+  description     String?
+  contentMarkdown String?
+  videoUrl        String?
+  thumbnail       String?
+  durationMinutes Int              @default(15)
+  order           Int              @default(0)
+  isFree          Boolean          @default(true)
+  isPublished     Boolean          @default(true)
+  unitId          String
+  unit            Unit             @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  files           LessonFile[]
+  progress        LessonProgress[]
+}
+
+model LessonFile {
+  id        String   @id @default(cuid())
+  title     String
+  fileUrl   String
+  fileType  String   @default("pdf") // pdf, doc, zip, etc.
+  fileSize  String?
+  lessonId  String?
+  lesson    Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  unitId    String?
+  unit      Unit?    @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  subjectId String?
+  subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON string
+  updatedAt DateTime @updatedAt
+}
+
+model CustomPage {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  description     String?
+  coverImage      String?
+  contentMarkdown String?
+  blocksJson      String?  // JSON array of Page Builder blocks
+  isPublished     Boolean  @default(true)
+  seoTitle        String?
+  seoDescription  String?
+  seoKeywords     String?
+  order           Int      @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model MediaItem {
+  id         String   @id @default(cuid())
+  name       String
+  url        String   @unique
+  type       String   @default("image") // image, pdf, video, doc
+  size       String?
+  mimeType   String?
+  dimensions String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model NavItem {
+  id           String    @id @default(cuid())
+  title        String
+  href         String
+  icon         String?
+  order        Int       @default(0)
+  isVisible    Boolean   @default(true)
+  openInNewTab Boolean   @default(false)
+  parentId     String?
+  parent       NavItem?  @relation("NavChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children     NavItem[] @relation("NavChildren")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model FooterColumn {
+  id        String       @id @default(cuid())
+  title     String
+  order     Int          @default(0)
+  isVisible Boolean      @default(true)
+  links     FooterLink[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model FooterLink {
+  id           String       @id @default(cuid())
+  title        String
+  href         String
+  icon         String?
+  order        Int          @default(0)
+  isVisible    Boolean      @default(true)
+  openInNewTab Boolean      @default(false)
+  columnId     String
+  column       FooterColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Exam {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  description     String?
+  subjectId       String?
+  subject         Subject?      @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  sectionId       String?
+  section         Section?      @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  year            Int?          @default(2024)
+  durationMinutes Int           @default(30)
+  totalMarks      Int           @default(100)
+  passMarks       Int           @default(50)
+  isPublished     Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  questions       Question[]
+  attempts        ExamAttempt[]
+}
+
+model Question {
+  id           String        @id @default(cuid())
+  examId       String
+  exam         Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
+  questionText String
+  explanation  String?
+  marks        Int           @default(1)
+  order        Int           @default(0)
+  createdAt    DateTime      @default(now())
+
+  choices      Choice[]
+  answers      ExamAnswer[]
+}
+
+model Choice {
+  id         String       @id @default(cuid())
+  questionId String
+  question   Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text       String
+  isCorrect  Boolean      @default(false)
+  order      Int           @default(0)
+
+  answers    ExamAnswer[]
+}
+
+model ExamAttempt {
+  id               String       @id @default(cuid())
+  userId           String
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId           String
+  exam             Exam         @relation(fields: [examId], references: [id], onDelete: Cascade)
+  score            Float
+  totalPossible    Float
+  percentage       Float
+  isPassed         Boolean
+  timeSpentSeconds Int          @default(0)
+  completedAt      DateTime     @default(now())
+  createdAt        DateTime     @default(now())
+
+  answers          ExamAnswer[]
+}
+
+model ExamAnswer {
+  id               String      @id @default(cuid())
+  attemptId        String
+  attempt          ExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId       String
+  question         Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedChoiceId String?
+  selectedChoice   Choice?     @relation(fields: [selectedChoiceId], references: [id], onDelete: SetNull)
+  isCorrect        Boolean     @default(false)
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(true)
+  completedAt DateTime @default(now())
+
+  @@unique([userId, lessonId])
+}
+
+model Favorite {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType String   // SUBJECT, LESSON, EXAM
+  targetId   String
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, targetType, targetId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  details   String?
+  createdAt DateTime  @default(now())
+}
