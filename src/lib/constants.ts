@@ -129,7 +129,7 @@ export const DEFAULT_NAV_ITEMS = [
   { title: 'الامتحانات التفاعلية', href: '/exams', icon: 'FileCheck2', order: 3, isVisible: true },
   { title: 'الامتحانات السابقة', href: '/files', icon: 'History', order: 4, isVisible: true },
   { title: 'من نحن', href: '/about', icon: 'Info', order: 5, isVisible: true },
-  { title: 'تواصل معنا', href: '/contact', icon: 'Mail', order: 6, isVisible: true },
+  { title: 'دعم المنصة', href: '/contact', icon: 'ShieldCheck', order: 6, isVisible: true },
 ];
 
 export const DEFAULT_FOOTER_COLUMNS = [

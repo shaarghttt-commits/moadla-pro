@@ -87,7 +87,7 @@ export default function Footer() {
 
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/4543534543hjhg?locale=ar_AR"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="فيسبوك"
@@ -114,7 +114,7 @@ export default function Footer() {
                 <Send className="w-4 h-4" />
               </a>
               <a
-                href="https://wa.me"
+                href="https://wa.me/201070130096?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%87%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%20%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%85%20%D8%AB%D8%84%D8%A7%D9%86%D8%A8%D8%B1%D8%B3%D8%AA%20%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%91%D8%8A%D8%8A"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="واتساب"
@@ -152,7 +152,7 @@ export default function Footer() {
               <ul className="space-y-3 text-sm text-slate-400">
                 <li className="flex items-center gap-2.5">
                   <Mail className="w-4 h-4 text-brand-400 shrink-0" />
-                  <span className="text-xs">support@moadla.pro</span>
+                  <span className="text-xs">shaarghttt@gmail.com</span>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Phone className="w-4 h-4 text-brand-400 shrink-0" />
@@ -160,7 +160,7 @@ export default function Footer() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                  <span className="text-xs">جمهورية مصر العربية - القاهرة</span>
+                  <span className="text-xs">جمهورية مصر العربية - الشرقية</span>
                 </li>
               </ul>
             </div>
@@ -169,7 +169,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Moadla Pro. جميع الحقوق محفوظة.</p>
+          <p>© 2022 Moadla Pro. جميع الحقوق محفوظة.</p>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="hover:text-slate-300 transition-colors">
               سياسة الخصوصية

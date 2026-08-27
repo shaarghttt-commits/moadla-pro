@@ -71,7 +71,7 @@ export default function SuccessfulStudentsPanel({ students }: SuccessfulStudents
               success stories
             </p>
             <h2 className="mt-2 text-xl sm:text-2xl font-black text-slate-900 font-tajawal">
-              طلاب نجحوا في معادلة كلية الهندسة
+              الطلاب الذين نجحوا مع المنصة
             </h2>
           </div>
 

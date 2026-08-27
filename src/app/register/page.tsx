@@ -32,7 +32,7 @@ export default function RegisterPage() {
 
     const result = await register(name, email, password, phone);
     if (result.success) {
-      router.push('/dashboard');
+      router.push('/');
     } else {
       setError(result.error || 'فشل إنشاء الحساب');
       setLoading(false);

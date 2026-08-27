@@ -38,6 +38,7 @@ export default function AdminLayoutClient({ children }: AdminLayoutClientProps) 
         { href: '/admin', label: 'الإحصائيات', icon: <LayoutDashboard className="w-4 h-4" /> },
         { href: '/admin/students', label: 'الطلاب', icon: <Users className="w-4 h-4" /> },
         { href: '/admin/notifications', label: 'الإشعارات', icon: <Bell className="w-4 h-4" /> },
+        { href: '/admin/import', label: 'استيراد محتوى خارجي', icon: <Globe className="w-4 h-4" /> },
       ],
     },
     {

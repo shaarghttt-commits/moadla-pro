@@ -99,18 +99,22 @@ model Lesson {
 }
 
 model LessonFile {
-  id        String   @id @default(cuid())
-  title     String
-  fileUrl   String
-  fileType  String   @default("pdf") // pdf, doc, zip, etc.
-  fileSize  String?
-  lessonId  String?
-  lesson    Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  unitId    String?
-  unit      Unit?    @relation(fields: [unitId], references: [id], onDelete: SetNull)
-  subjectId String?
-  subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  title         String
+  fileUrl       String
+  fileType      String   @default("pdf") // pdf, doc, zip, etc.
+  fileSize      String?
+  sourceUrl     String?
+  sourceWebsite String?
+  canonicalUrl  String?
+  importedAt    DateTime?
+  lessonId      String?
+  lesson        Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  unitId        String?
+  unit          Unit?    @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  subjectId     String?
+  subject       Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  createdAt     DateTime @default(now())
 }
 
 model SiteSetting {
@@ -121,32 +125,40 @@ model SiteSetting {
 }
 
 model CustomPage {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   title           String
-  slug            String   @unique
+  slug            String    @unique
   description     String?
   coverImage      String?
   contentMarkdown String?
-  blocksJson      String?  // JSON array of Page Builder blocks
-  isPublished     Boolean  @default(true)
+  blocksJson      String?   // JSON array of Page Builder blocks
+  isPublished     Boolean   @default(true)
   seoTitle        String?
   seoDescription  String?
   seoKeywords     String?
-  order           Int      @default(0)
+  sourceUrl       String?
+  sourceWebsite   String?
+  canonicalUrl    String?
+  importedAt      DateTime?
+  order           Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
 
 model MediaItem {
-  id         String   @id @default(cuid())
-  name       String
-  url        String   @unique
-  type       String   @default("image") // image, pdf, video, doc
-  size       String?
-  mimeType   String?
-  dimensions String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String    @id @default(cuid())
+  name          String
+  url           String    @unique
+  type          String    @default("image") // image, pdf, video, doc
+  size          String?
+  mimeType      String?
+  dimensions    String?
+  sourceUrl     String?
+  sourceWebsite String?
+  canonicalUrl  String?
+  importedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model NavItem {
