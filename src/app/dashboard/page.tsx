@@ -16,6 +16,7 @@ import {
   Bell,
   Sparkles,
   ChevronLeft,
+  Users,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { Metadata } from 'next';
@@ -115,6 +116,27 @@ export default async function DashboardPage() {
     take: 3,
     orderBy: { createdAt: 'desc' },
   });
+
+  // 7. Fetch successful students in engineering equivalence
+  const successfulEngineeringStudents = await prisma.examAttempt.findMany({
+    where: { isPassed: true },
+    include: {
+      user: true,
+      exam: {
+        include: {
+          section: true,
+        },
+      },
+    },
+    orderBy: { completedAt: 'desc' },
+    take: 12,
+  });
+
+  const engineeringSuccessNames = successfulEngineeringStudents
+    .filter((attempt) => attempt.exam.section?.slug === 'engineering')
+    .map((attempt) => attempt.user.name)
+    .filter((name, index, arr) => name && arr.indexOf(name) === index)
+    .slice(0, 8);
 
   return (
     <div className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -395,6 +417,40 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-brand-50 dark:from-emerald-950/40 dark:via-slate-900 dark:to-brand-950/40 border border-emerald-200/80 dark:border-emerald-800/60 p-6 shadow-soft space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-black text-slate-900 dark:text-white font-tajawal flex items-center gap-2">
+                <Users className="w-5 h-5 text-emerald-600" />
+                <span>طلاب نجحوا في معادلة كلية الهندسة</span>
+              </h3>
+              <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">
+                {engineeringSuccessNames.length} اسم
+              </span>
+            </div>
+
+            {engineeringSuccessNames.length > 0 ? (
+              <div className="space-y-2">
+                {engineeringSuccessNames.map((name, index) => (
+                  <div
+                    key={`${name}-${index}`}
+                    className="flex items-center gap-3 rounded-2xl bg-white/80 dark:bg-slate-900/60 border border-emerald-100 dark:border-emerald-800/50 px-3 py-2.5"
+                  >
+                    <span className="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">
+                      {index + 1}
+                    </span>
+                    <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{name}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-emerald-300 bg-white/60 dark:bg-slate-900/50 p-4 text-center">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  لا توجد بيانات ناجحين متاحة حاليًا في معادلة كلية الهندسة.
+                </p>
               </div>
             )}
           </div>

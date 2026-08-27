@@ -11,10 +11,16 @@ export const DEFAULT_SETTINGS = {
     youtubeUrl: 'https://youtube.com',
   },
   hero: {
-    badge: '🚀 المنصة الأقوى لمعادلات الجامعات المصرية 2024 - 2025',
+    badge: '🚀 المنصة الأقوى لمعادلات الجامعات المصرية',
     title: 'طريقك المضمون للالتحاق بكليات القمة',
     subtitle: 'شروحات فيديو تفاعلية، مذكرات وملخصات PDF قابلة للتحميل، وبنك أسئلة وامتحانات سابقة وتجريبية تحاكي نظام البابل شيت الحديث 100%.',
     imageUrl: '',
+    studentPhotos: [
+      { url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1200&auto=format&fit=crop&q=80', label: 'طالب 1' },
+      { url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200&auto=format&fit=crop&q=80', label: 'طالبة 2' },
+      { url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1200&auto=format&fit=crop&q=80', label: 'طالب 3' },
+      { url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1200&auto=format&fit=crop&q=80', label: 'طالبة 4' },
+    ],
     primaryButtonText: 'ابدأ التعلم مجاناً',
     primaryButtonLink: '/sections',
     secondaryButtonText: 'تصفح الامتحانات السابقة',
@@ -63,6 +69,57 @@ export const DEFAULT_SETTINGS = {
     buttonText: 'إنشاء حساب جديد',
     buttonLink: '/register',
   },
+  filesPage: {
+    badge: 'بنك الملفات والامتحانات السابقة',
+    title: 'الامتحانات السابقة والملاحظات التعليمية',
+    subtitle: 'تصفح الملفات المصنفة حسب نوع المعادلة، ثم داخل كل مادة ستجد الامتحانات السابقة الخاصة بها فقط.',
+    lastUpdateLabel: 'آخر تحديث',
+    subjectCountLabel: 'المواد المتاحة',
+    equationTypeLabel: 'أنواع المعادلات',
+    emptyTitle: 'لا توجد ملفات منشورة حالياً',
+    emptyDescription: 'سيتم إضافة الملفات والملخصات هنا فور نشرها من لوحة الإدارة.',
+  },
+  successful_students: [
+    {
+      name: 'عمر خالد الدسوقي',
+      avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&auto=format&fit=crop&q=80',
+      year: 2025,
+      grades: [
+        { label: 'الإنجليزية', value: 92 },
+        { label: 'الفيزياء', value: 96 },
+        { label: 'الكيمياء', value: 88 },
+        { label: 'رياضة 1', value: 98 },
+        { label: 'رياضة 2', value: 94 },
+        { label: 'الميكانيكا', value: 90 },
+      ],
+    },
+    {
+      name: 'سارة محمد عبد الرحمن',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80',
+      year: 2025,
+      grades: [
+        { label: 'الإنجليزية', value: 89 },
+        { label: 'الفيزياء', value: 91 },
+        { label: 'الكيمياء', value: 93 },
+        { label: 'رياضة 1', value: 95 },
+        { label: 'رياضة 2', value: 97 },
+        { label: 'الميكانيكا', value: 92 },
+      ],
+    },
+    {
+      name: 'يوسف محمود القاضي',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80',
+      year: 2025,
+      grades: [
+        { label: 'الإنجليزية', value: 85 },
+        { label: 'الفيزياء', value: 89 },
+        { label: 'الكيمياء', value: 87 },
+        { label: 'رياضة 1', value: 91 },
+        { label: 'رياضة 2', value: 90 },
+        { label: 'الميكانيكا', value: 88 },
+      ],
+    },
+  ],
 };
 
 export const DEFAULT_NAV_ITEMS = [
@@ -70,7 +127,7 @@ export const DEFAULT_NAV_ITEMS = [
   { title: 'المعادلات', href: '/sections', icon: 'Layers', order: 1, isVisible: true },
   { title: 'المواد الدراسية', href: '/subjects', icon: 'BookOpen', order: 2, isVisible: true },
   { title: 'الامتحانات التفاعلية', href: '/exams', icon: 'FileCheck2', order: 3, isVisible: true },
-  { title: 'الامتحانات السابقة', href: '/admin/files', icon: 'History', order: 4, isVisible: true },
+  { title: 'الامتحانات السابقة', href: '/files', icon: 'History', order: 4, isVisible: true },
   { title: 'من نحن', href: '/about', icon: 'Info', order: 5, isVisible: true },
   { title: 'تواصل معنا', href: '/contact', icon: 'Mail', order: 6, isVisible: true },
 ];
@@ -103,11 +160,12 @@ export const DEFAULT_FOOTER_COLUMNS = [
 export const DEFAULT_HOMEPAGE_LAYOUT = {
   sections: [
     { id: 'hero', name: 'قسم الواجهة الرئيسي (Hero)', isVisible: true, order: 0 },
-    { id: 'search', name: 'شريط البحث الشامل', isVisible: true, order: 1 },
-    { id: 'sectionsGrid', name: 'شبكة الأقسام الأكاديمية', isVisible: true, order: 2 },
-    { id: 'features', name: 'مميزات المنصة (Features Cards)', isVisible: true, order: 3 },
-    { id: 'latestContent', name: 'أحدث الدروس والامتحانات والمذكرات', isVisible: true, order: 4 },
-    { id: 'cta', name: 'بانر الدعوة للتسجيل (CTA Banner)', isVisible: true, order: 5 },
+    { id: 'successfulStudents', name: 'طلاب نجحوا في معادلة كلية الهندسة', isVisible: true, order: 1 },
+    { id: 'search', name: 'شريط البحث الشامل', isVisible: true, order: 2 },
+    { id: 'sectionsGrid', name: 'شبكة الأقسام الأكاديمية', isVisible: true, order: 3 },
+    { id: 'features', name: 'مميزات المنصة (Features Cards)', isVisible: true, order: 4 },
+    { id: 'latestContent', name: 'أحدث الدروس والامتحانات والمذكرات', isVisible: true, order: 5 },
+    { id: 'cta', name: 'بانر الدعوة للتسجيل (CTA Banner)', isVisible: true, order: 6 },
   ],
 };
 

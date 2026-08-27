@@ -21,10 +21,11 @@ import {
   Mail,
   MessageCircle,
   PlayCircle,
+  BookOpen,
 } from 'lucide-react';
 
 export default function AdminSettingsPage() {
-  const [activeTab, setActiveTab] = useState<'hero' | 'features' | 'stats' | 'cta' | 'branding'>('hero');
+  const [activeTab, setActiveTab] = useState<'hero' | 'filesPage' | 'features' | 'stats' | 'cta' | 'branding' | 'successStudents'>('hero');
   const [settings, setSettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -79,6 +80,99 @@ export default function AdminSettingsPage() {
       ...prev,
       hero: { ...prev.hero, [field]: val },
     }));
+  };
+
+  const normalizeStudentPhotoEntry = (item: any, index: number) => {
+    if (typeof item === 'string') {
+      return { url: item, label: `طالب ${index + 1}`, details: 'كلية الهندسة - سنة أولى' };
+    }
+
+    return {
+      url: item?.url || '',
+      label: item?.label || item?.title || `طالب ${index + 1}`,
+      details: item?.details || 'كلية الهندسة - سنة أولى',
+    };
+  };
+
+  const addStudentPhoto = () => {
+    setSettings((prev: any) => ({
+      ...prev,
+      hero: {
+        ...prev.hero,
+        studentPhotos: [...(prev?.hero?.studentPhotos || []), { url: '', label: `طالب ${(prev?.hero?.studentPhotos || []).length + 1}`, details: 'كلية الهندسة - سنة أولى' }],
+      },
+    }));
+  };
+
+  const handleStudentPhotoChange = (index: number, field: 'url' | 'label' | 'details', value: string) => {
+    const currentPhotos = [...(settings?.hero?.studentPhotos || [])].map((photo, photoIndex) =>
+      normalizeStudentPhotoEntry(photo, photoIndex)
+    );
+
+    currentPhotos[index] = {
+      ...currentPhotos[index],
+      [field]: value,
+    };
+
+    setSettings((prev: any) => ({
+      ...prev,
+      hero: { ...prev.hero, studentPhotos: currentPhotos },
+    }));
+  };
+
+  const removeStudentPhoto = (index: number) => {
+    const filtered = (settings?.hero?.studentPhotos || [])
+      .map((photo: any, photoIndex: number) => normalizeStudentPhotoEntry(photo, photoIndex))
+      .filter((_: any, i: number) => i !== index);
+
+    setSettings((prev: any) => ({
+      ...prev,
+      hero: { ...prev.hero, studentPhotos: filtered },
+    }));
+  };
+
+  const addSuccessfulStudent = () => {
+    setSettings((prev: any) => ({
+      ...prev,
+      successful_students: [
+        ...(prev?.successful_students || []),
+        {
+          name: `طالب ${((prev?.successful_students || []).length || 0) + 1}`,
+          avatar: '',
+          year: 2025,
+          grades: [
+            { label: 'الإنجليزية', value: 85 },
+            { label: 'الفيزياء', value: 88 },
+            { label: 'الكيمياء', value: 86 },
+            { label: 'رياضة 1', value: 90 },
+            { label: 'رياضة 2', value: 91 },
+            { label: 'الميكانيكا', value: 87 },
+          ],
+        },
+      ],
+    }));
+  };
+
+  const updateSuccessfulStudent = (index: number, field: 'name' | 'avatar' | 'year', value: string | number) => {
+    const next = [...(settings?.successful_students || [])];
+    next[index] = { ...next[index], [field]: value };
+    setSettings((prev: any) => ({ ...prev, successful_students: next }));
+  };
+
+  const updateStudentGrade = (studentIndex: number, gradeIndex: number, field: 'label' | 'value', value: string | number) => {
+    const next = [...(settings?.successful_students || [])];
+    next[studentIndex] = {
+      ...next[studentIndex],
+      grades: [...(next[studentIndex]?.grades || [])].map((grade, idx) =>
+        idx === gradeIndex ? { ...grade, [field]: field === 'value' ? Number(value) || 0 : value } : grade
+      ),
+    };
+    setSettings((prev: any) => ({ ...prev, successful_students: next }));
+  };
+
+  const removeSuccessfulStudent = (studentIndex: number) => {
+    const next = (settings?.successful_students || []).filter((_: any, i: number) => i !== studentIndex);
+    setSettings((prev: any) => ({ ...prev, successful_students: next }));
   };
 
   const handleBrandingChange = (field: string, val: any) => {
@@ -183,6 +277,8 @@ export default function AdminSettingsPage() {
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           {[
             { id: 'hero', label: 'قسم الواجهة (Hero Section)', icon: <Layout className="w-4 h-4" /> },
+            { id: 'successStudents', label: 'طلاب النجاح', icon: <Sparkles className="w-4 h-4" /> },
+            { id: 'filesPage', label: 'صفحة الامتحانات السابقة', icon: <BookOpen className="w-4 h-4" /> },
             { id: 'features', label: 'المميزات (Features)', icon: <Sparkles className="w-4 h-4" /> },
             { id: 'stats', label: 'أرقام وإحصائيات المنصة', icon: <Palette className="w-4 h-4" /> },
             { id: 'cta', label: 'الدعوة للتسجيل (CTA)', icon: <Save className="w-4 h-4" /> },
@@ -320,6 +416,318 @@ export default function AdminSettingsPage() {
 
                 <div className="mt-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
                   💡 عند عدم رفع صورة، ستعرض المنصة بطاقة ذكية تفاعلية تعرض نبذة عن المواد والامتحانات تلقائياً.
+                </div>
+
+                <div className="mt-6 rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/30 p-4">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">صور الطلاب في السلايدر</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        أضف صور طلابك من عندك وستخدمها تلقائياً في البطاقات المتحركة
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addStudentPhoto}
+                      className="px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-[11px] font-bold"
+                    >
+                      + إضافة صورة
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {(settings.hero?.studentPhotos || []).length === 0 && (
+                      <div className="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 text-center text-xs text-slate-500 dark:text-slate-400">
+                        لا توجد صور للطلاب حالياً. اضغط على "إضافة صورة" لبدء الإعداد.
+                      </div>
+                    )}
+
+                    {(settings.hero?.studentPhotos || []).map((photo: any, index: number) => {
+                      const normalized = normalizeStudentPhotoEntry(photo, index);
+
+                      return (
+                        <div key={`student-photo-${index}`} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
+                          <ImageUpload
+                            label={`صورة ${normalized.label || `الطالب ${index + 1}`}`}
+                            helperText="يمكنك رفع صورة من جهازك أو نسخ رابط الصورة يدويًا"
+                            currentImageUrl={normalized.url || ''}
+                            onUploadSuccess={(url) => handleStudentPhotoChange(index, 'url', url)}
+                            onRemove={() => removeStudentPhoto(index)}
+                            aspectRatio="video"
+                          />
+
+                          <div className="mt-3">
+                            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                              اسم الطالب
+                            </label>
+                            <input
+                              type="text"
+                              value={normalized.label || ''}
+                              onChange={(e) => handleStudentPhotoChange(index, 'label', e.target.value)}
+                              placeholder="مثال: محمد علي"
+                              className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                            />
+                          </div>
+
+                          <div className="mt-3">
+                            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                              الكلية والسنة
+                            </label>
+                            <input
+                              type="text"
+                              value={normalized.details || ''}
+                              onChange={(e) => handleStudentPhotoChange(index, 'details', e.target.value)}
+                              placeholder="مثال: كلية الهندسة - سنة أولى"
+                              className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                            />
+                          </div>
+
+                          <div className="mt-3">
+                            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                              رابط الصورة (اختياري)
+                            </label>
+                            <input
+                              type="text"
+                              value={normalized.url || ''}
+                              onChange={(e) => handleStudentPhotoChange(index, 'url', e.target.value)}
+                              placeholder="https://example.com/student-photo.jpg"
+                              className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'successStudents' && (
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">إدارة بطاقات الطلاب الناجحين</h3>
+                <p className="text-xs text-slate-500">غير صورة الطالب ودرجاته، وسيتم تحديث الرسم البياني تلقائياً في الصفحة الرئيسية.</p>
+              </div>
+              <button
+                onClick={() => saveKey('successful_students', settings.successful_students || [])}
+                disabled={saving}
+                className="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/20 flex items-center gap-2 disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                <span>{saving ? 'جاري الحفظ...' : 'حفظ بيانات الطلاب'}</span>
+              </button>
+            </div>
+
+            <div className="space-y-5">
+              {(settings.successful_students || []).map((student: any, studentIndex: number) => (
+                <div key={`student-${studentIndex}`} className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/40 p-4 space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white">طالب {studentIndex + 1}</h4>
+                    <button
+                      type="button"
+                      onClick={() => removeSuccessfulStudent(studentIndex)}
+                      className="px-3 py-1.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 text-[11px] font-bold flex items-center gap-1.5"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>حذف</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">اسم الطالب</label>
+                      <input
+                        type="text"
+                        value={student?.name || ''}
+                        onChange={(e) => updateSuccessfulStudent(studentIndex, 'name', e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">السنة</label>
+                      <input
+                        type="number"
+                        value={student?.year || 2025}
+                        onChange={(e) => updateSuccessfulStudent(studentIndex, 'year', Number(e.target.value) || 2025)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_0.9fr] gap-4 items-start">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">رابط صورة الطالب</label>
+                      <input
+                        type="text"
+                        value={student?.avatar || ''}
+                        onChange={(e) => updateSuccessfulStudent(studentIndex, 'avatar', e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white"
+                      />
+                    </div>
+
+                    <div className="w-full">
+                      <ImageUpload
+                        label="تغيير صورة الطالب"
+                        helperText="ارفع صورة جديدة مباشرة من جهازك"
+                        currentImageUrl={student?.avatar || ''}
+                        onUploadSuccess={(url) => updateSuccessfulStudent(studentIndex, 'avatar', url)}
+                        onRemove={() => updateSuccessfulStudent(studentIndex, 'avatar', '')}
+                        aspectRatio="square"
+                      />
+                    </div>
+                  </div>
+
+                  {student?.avatar && (
+                    <div className="flex items-center gap-3">
+                      <img src={student.avatar} alt={student.name || 'طالب'} className="h-16 w-16 rounded-full object-cover border-4 border-emerald-100" />
+                      <span className="text-[11px] text-slate-500">معاينة الصورة</span>
+                    </div>
+                  )}
+
+                  <div>
+                    <div className="mb-2 flex items-center justify-between">
+                      <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">درجات المواد</h5>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {(student?.grades || []).map((grade: any, gradeIndex: number) => (
+                        <div key={`${studentIndex}-grade-${gradeIndex}`} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3 space-y-2">
+                          <input
+                            type="text"
+                            value={grade?.label || ''}
+                            onChange={(e) => updateStudentGrade(studentIndex, gradeIndex, 'label', e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                          />
+                          <input
+                            type="number"
+                            min={0}
+                            max={100}
+                            value={grade?.value ?? 0}
+                            onChange={(e) => updateStudentGrade(studentIndex, gradeIndex, 'value', Number(e.target.value) || 0)}
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addSuccessfulStudent}
+                className="w-full px-4 py-3 rounded-2xl border border-dashed border-brand-300 bg-brand-50 hover:bg-brand-100 text-sm font-bold text-brand-700 flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                <span>إضافة طالب جديد</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'filesPage' && (
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">إعدادات صفحة الامتحانات السابقة</h3>
+                <p className="text-xs text-slate-500">تعديل العنوان، الوصف، وعناوين الإحصائيات الظاهرة في الصفحة العامة</p>
+              </div>
+              <button
+                onClick={() => saveKey('filesPage', settings.filesPage)}
+                disabled={saving}
+                className="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/20 flex items-center gap-2 disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                <span>{saving ? 'جاري الحفظ...' : 'حفظ إعدادات الصفحة'}</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الشارة (Badge)</label>
+                  <input
+                    type="text"
+                    value={settings.filesPage?.badge || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, badge: e.target.value } }))}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">عنوان الصفحة</label>
+                  <input
+                    type="text"
+                    value={settings.filesPage?.title || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, title: e.target.value } }))}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الوصف الرئيسي</label>
+                  <textarea
+                    rows={4}
+                    value={settings.filesPage?.subtitle || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, subtitle: e.target.value } }))}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">عنوان بطاقة "آخر تحديث"</label>
+                  <input
+                    type="text"
+                    value={settings.filesPage?.lastUpdateLabel || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, lastUpdateLabel: e.target.value } }))}
+                    className="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">عنوان بطاقة "المواد المتاحة"</label>
+                  <input
+                    type="text"
+                    value={settings.filesPage?.subjectCountLabel || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, subjectCountLabel: e.target.value } }))}
+                    className="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">عنوان بطاقة "أنواع المعادلات"</label>
+                  <input
+                    type="text"
+                    value={settings.filesPage?.equationTypeLabel || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, equationTypeLabel: e.target.value } }))}
+                    className="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">عنوان حالة عدم وجود ملفات</label>
+                  <input
+                    type="text"
+                    value={settings.filesPage?.emptyTitle || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, emptyTitle: e.target.value } }))}
+                    className="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">وصف حالة عدم وجود ملفات</label>
+                  <textarea
+                    rows={3}
+                    value={settings.filesPage?.emptyDescription || ''}
+                    onChange={(e) => setSettings((prev: any) => ({ ...prev, filesPage: { ...prev.filesPage, emptyDescription: e.target.value } }))}
+                    className="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                  />
                 </div>
               </div>
             </div>

@@ -139,6 +139,23 @@ export default function AdminFilesPage() {
     });
   }, [files, searchQuery, selectedSubjectFilter]);
 
+  const subjectFolders = useMemo(() => {
+    const groups = new Map<string, { id: string; title: string; files: FileItem[] }>();
+
+    filteredFiles.forEach((file) => {
+      const subjectId = file.subjectId || file.unit?.subject?.id || file.lesson?.unit?.subject?.id || 'general';
+      const subjectTitle = file.subject?.title || file.unit?.subject?.title || file.lesson?.unit?.subject?.title || 'ملف عام';
+
+      if (!groups.has(subjectId)) {
+        groups.set(subjectId, { id: subjectId, title: subjectTitle, files: [] });
+      }
+
+      groups.get(subjectId)?.files.push(file);
+    });
+
+    return Array.from(groups.values()).sort((a, b) => a.title.localeCompare(b.title));
+  }, [filteredFiles]);
+
   const openAddModal = () => {
     setEditingFile(null);
     setFormTitle('');
@@ -353,136 +370,151 @@ export default function AdminFilesPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredFiles.map((file) => {
-              const isPdf = file.fileType === 'pdf' || file.fileUrl.endsWith('.pdf');
-              const parentTitle =
-                file.lesson?.title ||
-                file.unit?.title ||
-                file.subject?.title ||
-                'ملف عام غير مربوط';
-
-              return (
-                <div
-                  key={file.id}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-2xl p-5 shadow-sm transition-all flex flex-col justify-between group"
-                >
-                  <div>
-                    {/* File Header */}
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-11 h-11 rounded-xl flex items-center justify-center font-bold flex-shrink-0 ${
-                            isPdf
-                              ? 'bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400'
-                              : 'bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400'
-                          }`}
-                        >
-                          <FileText className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-brand-600 transition-colors">
-                            {file.title}
-                          </h4>
-                          <span className="text-[11px] text-slate-400 font-mono">
-                            {file.fileSize || (isPdf ? 'PDF' : 'مستند')}
-                          </span>
-                        </div>
-                      </div>
-
-                      <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase">
-                        {file.fileType}
-                      </span>
+          <div className="space-y-6">
+            {subjectFolders.map((folder) => (
+              <div
+                key={folder.id}
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-sm"
+              >
+                <div className="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                      <FolderTree className="w-5 h-5" />
                     </div>
-
-                    {/* Linked Context Badge */}
-                    <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2.5 mb-4 space-y-1 text-xs">
-                      <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium">
-                        {file.lesson ? (
-                          <PlayCircle className="w-3.5 h-3.5 text-brand-500 flex-shrink-0" />
-                        ) : file.unit ? (
-                          <FolderTree className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                        ) : file.subject ? (
-                          <BookOpen className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
-                        ) : (
-                          <FileCheck className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                        )}
-                        <span className="truncate">{parentTitle}</span>
-                      </div>
-                      {file.lesson?.unit?.subject?.title && (
-                        <p className="text-[11px] text-slate-400 truncate pr-5">
-                          المادة: {file.lesson.unit.subject.title}
-                        </p>
-                      )}
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-500">مجلد المادة</p>
+                      <h3 className="text-lg font-black text-slate-900 dark:text-white">{folder.title}</h3>
                     </div>
                   </div>
-
-                  {/* Actions Footer */}
-                  <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1">
-                    <div className="flex items-center gap-1">
-                      {/* Preview Button */}
-                      <button
-                        onClick={() => setPreviewPdf({ url: file.fileUrl, title: file.title })}
-                        className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/40 rounded-xl transition-colors"
-                        title="معاينة سريعة"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-
-                      {/* Open in new tab */}
-                      <a
-                        href={file.fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-xl transition-colors"
-                        title="فتح في نافذة جديدة"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-
-                      {/* Download */}
-                      <a
-                        href={file.fileUrl}
-                        download={file.title}
-                        className="p-2 text-slate-600 dark:text-slate-300 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-xl transition-colors"
-                        title="تحميل الملف"
-                      >
-                        <Download className="w-4 h-4" />
-                      </a>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      {/* Replace File */}
-                      <button
-                        onClick={() => setFileToReplace(file)}
-                        className="p-2 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-xl transition-colors"
-                        title="استبدال بملف جديد"
-                      >
-                        <RefreshCw className="w-4 h-4" />
-                      </button>
-
-                      {/* Edit Details */}
-                      <button
-                        onClick={() => openEditModal(file)}
-                        className="p-2 text-slate-500 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/40 rounded-xl transition-colors"
-                        title="تعديل الاسم والربط"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-
-                      {/* Delete */}
-                      <button
-                        onClick={() => setFileToDelete(file)}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors"
-                        title="حذف الملف"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
+                  <span className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                    {folder.files.length} ملف
+                  </span>
                 </div>
-              );
-            })}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {folder.files.map((file) => {
+                    const isPdf = file.fileType === 'pdf' || file.fileUrl.endsWith('.pdf');
+                    const parentTitle =
+                      file.lesson?.title ||
+                      file.unit?.title ||
+                      file.subject?.title ||
+                      'ملف عام غير مربوط';
+
+                    return (
+                      <div
+                        key={file.id}
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-2xl p-5 shadow-sm transition-all flex flex-col justify-between group"
+                      >
+                        <div>
+                          <div className="flex items-start justify-between gap-3 mb-3">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`w-11 h-11 rounded-xl flex items-center justify-center font-bold flex-shrink-0 ${
+                                  isPdf
+                                    ? 'bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400'
+                                    : 'bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400'
+                                }`}
+                              >
+                                <FileText className="w-6 h-6" />
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-brand-600 transition-colors">
+                                  {file.title}
+                                </h4>
+                                <span className="text-[11px] text-slate-400 font-mono">
+                                  {file.fileSize || (isPdf ? 'PDF' : 'مستند')}
+                                </span>
+                              </div>
+                            </div>
+
+                            <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase">
+                              {file.fileType}
+                            </span>
+                          </div>
+
+                          <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2.5 mb-4 space-y-1 text-xs">
+                            <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium">
+                              {file.lesson ? (
+                                <PlayCircle className="w-3.5 h-3.5 text-brand-500 flex-shrink-0" />
+                              ) : file.unit ? (
+                                <FolderTree className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                              ) : file.subject ? (
+                                <BookOpen className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+                              ) : (
+                                <FileCheck className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                              )}
+                              <span className="truncate">{parentTitle}</span>
+                            </div>
+                            {file.lesson?.unit?.subject?.title && (
+                              <p className="text-[11px] text-slate-400 truncate pr-5">
+                                المادة: {file.lesson.unit.subject.title}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => setPreviewPdf({ url: file.fileUrl, title: file.title })}
+                              className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/40 rounded-xl transition-colors"
+                              title="معاينة سريعة"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+
+                            <a
+                              href={file.fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-xl transition-colors"
+                              title="فتح في نافذة جديدة"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+
+                            <a
+                              href={file.fileUrl}
+                              download={file.title}
+                              className="p-2 text-slate-600 dark:text-slate-300 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-xl transition-colors"
+                              title="تحميل الملف"
+                            >
+                              <Download className="w-4 h-4" />
+                            </a>
+                          </div>
+
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => setFileToReplace(file)}
+                              className="p-2 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-xl transition-colors"
+                              title="استبدال بملف جديد"
+                            >
+                              <RefreshCw className="w-4 h-4" />
+                            </button>
+
+                            <button
+                              onClick={() => openEditModal(file)}
+                              className="p-2 text-slate-500 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/40 rounded-xl transition-colors"
+                              title="تعديل الاسم والربط"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+
+                            <button
+                              onClick={() => setFileToDelete(file)}
+                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors"
+                              title="حذف الملف"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

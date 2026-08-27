@@ -53,7 +53,15 @@ export default function Navbar() {
         ]);
         const navData = await navRes.json();
         if (navData.navItems && navData.navItems.length > 0) {
-          setNavLinks(navData.navItems);
+          const normalizedNavItems = navData.navItems.map((item: any) => ({
+            ...item,
+            href: item.href === '/admin/files' ? '/files' : item.href,
+            children: item.children?.map((child: any) => ({
+              ...child,
+              href: child.href === '/admin/files' ? '/files' : child.href,
+            })) || [],
+          }));
+          setNavLinks(normalizedNavItems);
         }
         const settingsData = await settingsRes.json();
         if (settingsData.settings?.branding) {

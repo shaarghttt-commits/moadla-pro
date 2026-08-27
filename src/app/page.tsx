@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import HeroSection from '@/components/home/HeroSection';
+import SuccessfulStudentsPanel from '@/components/home/SuccessfulStudentsPanel';
 import SearchBar from '@/components/home/SearchBar';
 import SectionsGrid from '@/components/home/SectionsGrid';
 import FeaturesSection from '@/components/home/FeaturesSection';
@@ -151,15 +152,79 @@ export default async function HomePage() {
       : undefined,
   }));
 
+  const successfulEngineeringStudents = await prisma.examAttempt.findMany({
+    where: { isPassed: true },
+    include: {
+      user: true,
+      exam: {
+        include: {
+          section: true,
+        },
+      },
+    },
+    orderBy: { completedAt: 'desc' },
+    take: 50,
+  });
+
+  const defaultSuccessfulStudents = Array.isArray(DEFAULT_SETTINGS.successful_students)
+    ? DEFAULT_SETTINGS.successful_students
+    : [];
+
+  const customSuccessfulStudents = Array.isArray(settingsMap.successful_students)
+    ? settingsMap.successful_students
+    : defaultSuccessfulStudents;
+
+  const studentProfiles = customSuccessfulStudents
+    .map((student: any) => ({
+      name: String(student?.name || 'طالب جديد'),
+      avatar:
+        student?.avatar ||
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80',
+      year: Number(student?.year) || 2025,
+      grades: Array.isArray(student?.grades) && student.grades.length > 0
+        ? student.grades.map((grade: any) => ({
+            label: String(grade?.label || 'مادة'),
+            value: Number(grade?.value) || 0,
+          }))
+        : [
+            { label: 'الإنجليزية', value: 88 },
+            { label: 'الفيزياء', value: 90 },
+            { label: 'الكيمياء', value: 86 },
+            { label: 'رياضة 1', value: 94 },
+            { label: 'رياضة 2', value: 92 },
+            { label: 'الميكانيكا', value: 89 },
+          ],
+    }))
+.filter(
+  (student: { name: string }, index: number, arr: { name: string }[]) =>
+    arr.findIndex((item) => item.name === student.name) === index
+)    .slice(0, 8);
+
   // Dynamic Layout Sections
-  const layoutSections = settingsMap.homepage_layout?.sections || [
+  const defaultLayoutSections = [
     { id: 'hero', isVisible: true, order: 0 },
-    { id: 'search', isVisible: true, order: 1 },
-    { id: 'sectionsGrid', isVisible: true, order: 2 },
-    { id: 'features', isVisible: true, order: 3 },
-    { id: 'latestContent', isVisible: true, order: 4 },
-    { id: 'cta', isVisible: true, order: 5 },
+    { id: 'successfulStudents', isVisible: true, order: 1 },
+    { id: 'search', isVisible: true, order: 2 },
+    { id: 'sectionsGrid', isVisible: true, order: 3 },
+    { id: 'features', isVisible: true, order: 4 },
+    { id: 'latestContent', isVisible: true, order: 5 },
+    { id: 'cta', isVisible: true, order: 6 },
   ];
+
+  const homepageLayoutSections = Array.isArray(settingsMap.homepage_layout?.sections)
+    ? settingsMap.homepage_layout.sections
+    : defaultLayoutSections;
+
+  const mergedLayoutSections = defaultLayoutSections.map((defaultSection) => {
+    const saved = homepageLayoutSections.find((section: any) => section.id === defaultSection.id);
+    return saved ? { ...defaultSection, ...saved } : defaultSection;
+  });
+
+  const extraSections = homepageLayoutSections.filter(
+    (section: any) => !defaultLayoutSections.some((defaultSection) => defaultSection.id === section.id)
+  );
+
+  const layoutSections = [...mergedLayoutSections, ...extraSections];
 
   const sortedSections = [...layoutSections].sort((a: any, b: any) => a.order - b.order);
 
@@ -167,6 +232,8 @@ export default async function HomePage() {
     switch (id) {
       case 'hero':
         return <HeroSection key="hero" heroData={settingsMap.hero} statsData={settingsMap.stats} />;
+      case 'successfulStudents':
+        return <SuccessfulStudentsPanel key="successfulStudents" students={studentProfiles} />;
       case 'search':
         return <SearchBar key="search" />;
       case 'sectionsGrid':

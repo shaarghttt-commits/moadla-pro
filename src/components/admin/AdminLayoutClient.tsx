@@ -58,14 +58,14 @@ export default function AdminLayoutClient({ children }: AdminLayoutClientProps) 
         { href: '/admin/subjects', label: 'المواد', icon: <BookOpen className="w-4 h-4" /> },
         { href: '/admin/units', label: 'الوحدات', icon: <FolderTree className="w-4 h-4" /> },
         { href: '/admin/lessons', label: 'الدروس', icon: <PlayCircle className="w-4 h-4" /> },
-        { href: '/admin/exams', label: 'الامتحانات', icon: <FileCheck2 className="w-4 h-4" /> },
+        { href: '/admin/exams', label: 'الامتحانات التفاعلية', icon: <FileCheck2 className="w-4 h-4" /> },
       ],
     },
     {
-      label: 'مكتبة الملفات',
+      label: 'الملفات والارشيف',
       links: [
         { href: '/admin/media', label: 'مكتبة الوسائط (Media Library)', icon: <ImageIcon className="w-4 h-4" /> },
-        { href: '/admin/files', label: 'مذكرات PDF', icon: <FileText className="w-4 h-4" /> },
+        { href: '/admin/files', label: 'الامتحانات السابقة/المذكرات', icon: <FileText className="w-4 h-4" /> },
       ],
     },
   ];

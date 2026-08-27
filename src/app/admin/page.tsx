@@ -167,12 +167,20 @@ export default async function AdminDashboardPage() {
               className="px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-accent-emerald hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 dark:hover:text-white text-xs font-bold flex items-center gap-2 transition-all"
             >
               <Plus className="w-4 h-4" />
-              <span>إنشاء امتحان جديد</span>
+              <span>إنشاء امتحان تفاعلي جديد</span>
+            </Link>
+
+            <Link
+              href="/admin/files"
+              className="px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-600 dark:hover:text-white text-xs font-bold flex items-center gap-2 transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              <span>إضافة امتحان سابق/ملف</span>
             </Link>
 
             <Link
               href="/admin/notifications"
-              className="px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-600 dark:hover:text-white text-xs font-bold flex items-center gap-2 transition-all"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-700 hover:text-white dark:hover:bg-slate-700 dark:hover:text-white text-xs font-bold flex items-center gap-2 transition-all"
             >
               <Plus className="w-4 h-4" />
               <span>إرسال إشعار للطلاب</span>
@@ -226,7 +234,7 @@ export default async function AdminDashboardPage() {
                 href="/admin/exams"
                 className="text-xs text-brand-600 dark:text-brand-400 font-bold hover:underline"
               >
-                إدارة الامتحانات
+                إدارة الامتحانات التفاعلية
               </Link>
             </div>
 

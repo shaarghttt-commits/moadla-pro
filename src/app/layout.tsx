@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import SplashScreen from '@/components/common/SplashScreen';
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-brand-500 selection:text-white">
         <ThemeProvider>
           <AuthProvider>
+            <SplashScreen />
             <div className="flex flex-col min-h-screen">
               <Navbar />
               <main className="flex-grow">{children}</main>

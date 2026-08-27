@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import {
   Sparkles,
   ArrowLeft,
@@ -12,12 +15,20 @@ import {
   HelpCircle,
 } from 'lucide-react';
 
+type StudentPhotoItem = {
+  url?: string;
+  label?: string;
+  title?: string;
+  details?: string;
+};
+
 interface HeroSectionProps {
   heroData?: {
     badge?: string;
     title?: string;
     subtitle?: string;
     imageUrl?: string;
+    studentPhotos?: Array<string | StudentPhotoItem>;
     primaryButtonText?: string;
     primaryButtonLink?: string;
     secondaryButtonText?: string;
@@ -32,22 +43,71 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ heroData, statsData }: HeroSectionProps) {
-  const badge = heroData?.badge || 'المنصة التعليمية الشاملة لمعادلات الجامعات الحكومية 2025';
-  const title = heroData?.title || 'طريقك للنجاح في امتحانات المعادلات يبدأ من هنا';
+  const badge = heroData?.badge || 'المنصة التعليمية الشاملة لمعادلات الجامعات الحكومية';
+  const title = heroData?.title || 'أقوى طريق نحو نجاحك في معادلة الجامعات';
   const subtitle =
     heroData?.subtitle ||
-    'استعد لاجتياز معادلة كلية الهندسة، الحاسبات، التجارة، والزراعة بأقوى نظام تعليمي تفاعلي: دروس فيديو متميزة، بنوك أسئلة محاكية للامتحانات الرسمية، ومتابعة فورية لمستوى تقدمك خطوة بخطوة.';
-  const primaryText = heroData?.primaryButtonText || 'ابدأ رحلتك مجاناً';
+    'استعد لاجتياز معادلة كلية الهندسة، الحاسبات، التجارة، والزراعة بأقوى نظام تعليمي تفاعلي: دروس فيديو احترافية، أسئلة محاكية للامتحانات الرسمية، ومتابعة يومية لتحسين مستواك خطوة بخطوة.';
+  const primaryText = heroData?.primaryButtonText || 'ابدأ الآن مجاناً';
   const primaryLink = heroData?.primaryButtonLink || '/register';
-  const secondaryText = heroData?.secondaryButtonText || 'استكشف الأقسام والمواد';
+  const secondaryText = heroData?.secondaryButtonText || 'استكشف المواد';
   const secondaryLink = heroData?.secondaryButtonLink || '/sections';
   const heroImage = heroData?.imageUrl;
 
-  const stats = statsData && statsData.length > 0 ? statsData : [
-    { id: '1', number: '+15,000', label: 'طالب متفوق بالمنصة' },
-    { id: '2', number: '94.8%', label: 'نسبة اجتياز المعادلة' },
-    { id: '3', number: '+500', label: 'سؤال وامتحان تفاعلي' },
+  const defaultStudentPhotos: StudentPhotoItem[] = [
+    { url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1200&auto=format&fit=crop&q=80', label: 'أحمد محمد', details: 'كلية الهندسة - سنة أولى' },
+    { url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200&auto=format&fit=crop&q=80', label: 'سارة علي', details: 'كلية الهندسة - سنة ثانية' },
+    { url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1200&auto=format&fit=crop&q=80', label: 'يوسف خالد', details: 'كلية الهندسة - سنة ثالثة' },
+    { url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1200&auto=format&fit=crop&q=80', label: 'ليلى محمود', details: 'كلية الهندسة - سنة رابعة' },
+    { url: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=1200&auto=format&fit=crop&q=80', label: 'محمد حسن', details: 'كلية الهندسة - سنة أولى' },
+    { url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=1200&auto=format&fit=crop&q=80', label: 'نورهان سامي', details: 'كلية الهندسة - سنة ثانية' },
+    { url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=1200&auto=format&fit=crop&q=80', label: 'محمود أسامة', details: 'كلية الهندسة - سنة ثالثة' },
+    { url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1200&auto=format&fit=crop&q=80', label: 'زينب رامي', details: 'كلية الهندسة - سنة رابعة' },
+    { url: 'https://images.unsplash.com/photo-1521119989659-a83eee488004?w=1200&auto=format&fit=crop&q=80', label: 'إبراهيم فتحي', details: 'كلية الهندسة - سنة أولى' },
+    { url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200&auto=format&fit=crop&q=80', label: 'سلمى أحمد', details: 'كلية الهندسة - سنة ثانية' },
   ];
+
+  const normalizeStudentPhotos = (photos?: Array<string | StudentPhotoItem>) => {
+    const source = Array.isArray(photos) && photos.length > 0 ? photos : defaultStudentPhotos;
+
+    return source
+      .map((item, index) => {
+        if (typeof item === 'string') {
+          return { url: item, label: `طالب ${index + 1}`, details: 'كلية الهندسة - سنة أولى' };
+        }
+
+        const url = item?.url || '';
+        if (!url) return null;
+
+        return {
+          url,
+          label: item?.label || item?.title || `طالب ${index + 1}`,
+          details: item?.details || 'كلية الهندسة - سنة أولى',
+        };
+      })
+      .filter((item): item is StudentPhotoItem & { url: string; label: string; details: string } => Boolean(item && item.url));
+  };
+
+  const studentPhotos = normalizeStudentPhotos(heroData?.studentPhotos);
+
+  const [activeStudentIndex, setActiveStudentIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveStudentIndex((current) => (current + 1) % studentPhotos.length);
+    }, 6000);
+
+    return () => window.clearInterval(intervalId);
+  }, [studentPhotos.length]);
+
+  const stats = statsData && statsData.length > 0 ? statsData : [
+    { id: '1', number: '+15,000', label: 'طالب يثق بالمنصة' },
+    { id: '2', number: '94.8%', label: 'متوسط النجاح' },
+    { id: '3', number: '+500', label: 'اختبار وملف تدريبي' },
+    { id: '4', number: '24/7', label: 'دعم ومتابعة' },
+  ];
+
+  const trustPills = ['دروس فيديو احترافية', 'أسئلة امتحانية حقيقية', 'متابعة مستمرة'];
 
   return (
     <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-32">
@@ -75,8 +135,20 @@ export default function HeroSection({ heroData, statsData }: HeroSectionProps) {
               {subtitle}
             </p>
 
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2">
+              {trustPills.map((pill) => (
+                <span
+                  key={pill}
+                  className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-bold text-brand-700 shadow-sm dark:border-brand-900/70 dark:bg-brand-950/60 dark:text-brand-300"
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  {pill}
+                </span>
+              ))}
+            </div>
+
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-3">
               <Link
                 href={primaryLink}
                 className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold text-white bg-gradient-to-r from-brand-700 via-brand-600 to-brand-500 hover:from-brand-800 hover:to-brand-600 shadow-xl shadow-brand-600/25 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.02] active:scale-95 group"
@@ -94,11 +166,27 @@ export default function HeroSection({ heroData, statsData }: HeroSectionProps) {
               </Link>
             </div>
 
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-4 text-right lg:justify-start">
+              <div className="flex -space-x-2">
+                {studentPhotos.slice(0, 4).map((student, idx) => (
+                  <img
+                    key={`${student.label}-${idx}`}
+                    src={student.url}
+                    alt={student.label}
+                    className="h-9 w-9 rounded-full border-2 border-white object-cover dark:border-slate-900"
+                  />
+                ))}
+              </div>
+              <div className="text-sm text-slate-600 dark:text-slate-300">
+                <span className="font-black text-slate-900 dark:text-white">+15,000</span> طالب يعتمدون على المنصة
+              </div>
+            </div>
+
             {/* Trust Badges */}
-            <div className={`pt-6 grid grid-cols-2 sm:grid-cols-${Math.min(stats.length, 4)} gap-4 border-t border-slate-200/80 dark:border-slate-800/80 text-right`}>
+            <div className="grid grid-cols-2 gap-4 border-t border-slate-200/80 pt-6 text-right dark:border-slate-800/80 sm:grid-cols-4">
               {stats.slice(0, 4).map((st, i) => (
                 <div key={st.id || i}>
-                  <div className="font-black text-2xl sm:text-3xl text-brand-600 dark:text-brand-400 font-tajawal">
+                  <div className="font-black text-2xl text-brand-600 dark:text-brand-400 sm:text-3xl font-tajawal">
                     {st.number}
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -121,63 +209,33 @@ export default function HeroSection({ heroData, statsData }: HeroSectionProps) {
                   />
                 </div>
               ) : (
-                /* Interactive Fallback Graphic Card */
-                <div className="relative rounded-3xl bg-gradient-to-br from-slate-900 to-slate-950 p-6 text-white shadow-2xl border border-slate-800/80 overflow-hidden">
-                  <div className="absolute top-0 right-0 w-48 h-48 bg-brand-500/20 rounded-full blur-2xl" />
+                <div className="relative overflow-hidden rounded-[32px] border border-slate-200/80 bg-slate-950 shadow-[0_35px_80px_rgba(15,23,42,0.18)] ring-1 ring-white/10">
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-500/15 via-sky-500/10 to-emerald-500/10" />
 
-                  <div className="relative space-y-6">
-                    {/* Card Header */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-brand-600/30 border border-brand-500/40 flex items-center justify-center text-brand-400">
-                          <Trophy className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-sm text-white">معادلة كلية الهندسة 2025</h3>
-                          <p className="text-[11px] text-slate-400">جامعة القاهرة • عين شمس • أسيوط</p>
-                        </div>
-                      </div>
-                      <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
-                        مفتوح للتسجيل
-                      </span>
-                    </div>
+                  <div className="relative aspect-[4/6] overflow-hidden">
+                    {studentPhotos.map((photo, index) => (
+                      <div
+                        key={`${photo.url}-${index}`}
+                        className={`absolute inset-0 transition-all duration-1500 ease-out ${
+                          index === activeStudentIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+                        }`}
+                      >
+                        <img
+                          src={photo.url}
+                          alt={photo.label || `طالب ${index + 1}`}
+                          className="h-full w-full object-cover"
+                        />
 
-                    {/* Progress Indicator */}
-                    <div className="bg-slate-800/60 rounded-2xl p-4 border border-slate-700/50 space-y-3">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-300 font-semibold">مادة التفاضل والتكامل</span>
-                        <span className="text-brand-400 font-bold">85% مكتمل</span>
+                        {photo.label && (
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-4 pb-5 pt-12 text-white">
+                            <div className="text-lg font-black leading-tight">{photo.label}</div>
+                            {photo.details && (
+                              <div className="text-xs text-white/85 mt-1">{photo.details}</div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <div className="w-full bg-slate-700/50 h-2.5 rounded-full overflow-hidden">
-                        <div className="bg-gradient-to-r from-brand-500 to-accent-emerald h-full rounded-full w-[85%]" />
-                      </div>
-                      <div className="flex items-center justify-between text-[11px] text-slate-400">
-                        <span>12 من 15 درساً منجزاً</span>
-                        <span className="flex items-center gap-1 text-emerald-400">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          اجتزت الامتحان التجريبي
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Features Mini Grid */}
-                    <div className="grid grid-cols-2 gap-3 pt-1">
-                      <div className="p-3 rounded-xl bg-slate-800/40 border border-slate-700/40 flex items-center gap-2.5">
-                        <PlayCircle className="w-4 h-4 text-brand-400" />
-                        <div className="text-right">
-                          <p className="text-xs font-bold text-white">شروحات فيديو</p>
-                          <p className="text-[10px] text-slate-400">جودة HD عالية</p>
-                        </div>
-                      </div>
-
-                      <div className="p-3 rounded-xl bg-slate-800/40 border border-slate-700/40 flex items-center gap-2.5">
-                        <FileCheck2 className="w-4 h-4 text-emerald-400" />
-                        <div className="text-right">
-                          <p className="text-xs font-bold text-white">امتحانات تفاعلية</p>
-                          <p className="text-[10px] text-slate-400">تصحيح فوري بابل شيت</p>
-                        </div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               )}
