@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { seedSourceWebsiteContent } from '@/lib/source-content-mapping';
 
 const prisma = new PrismaClient();
 
@@ -21,6 +22,8 @@ async function main() {
   await prisma.unit.deleteMany();
   await prisma.subject.deleteMany();
   await prisma.section.deleteMany();
+  await prisma.customPage.deleteMany();
+  await prisma.mediaItem.deleteMany();
   await prisma.user.deleteMany();
 
   // 2. Create Users
@@ -123,6 +126,9 @@ async function main() {
   });
 
   console.log('✅ Created 4 Main Equivalence Sections');
+
+  const sourceSync = await seedSourceWebsiteContent();
+  console.log('✅ Synced source website mappings', sourceSync);
 
   // 4. Create Subjects for Engineering
   const subCalculus = await prisma.subject.create({

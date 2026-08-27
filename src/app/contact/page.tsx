@@ -1,10 +1,15 @@
-'use client';
+import prisma from '@/lib/prisma';
+import { MessageCircle, Facebook, ExternalLink, Phone } from 'lucide-react';
 
-import { MessageCircle } from 'lucide-react';
+export default async function ContactPage() {
+  const importedContactPage = await prisma.customPage
+    .findUnique({
+      where: { slug: 'contact-source' },
+    })
+    .catch(() => null);
 
-export default function ContactPage() {
   return (
-    <div className="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       <div className="rounded-[32px] bg-white border border-slate-200/80 shadow-soft px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center justify-center lg:justify-start">
@@ -15,7 +20,7 @@ export default function ContactPage() {
 
           <div className="flex-1 text-right">
             <h1 className="text-[clamp(2.2rem,4.2vw,5.3rem)] font-black leading-[0.85] text-slate-900 font-cairo tracking-[-0.05em] whitespace-nowrap">
-              دعم المنصة والتحويلات
+              {importedContactPage?.title || 'دعم المنصة والتحويلات'}
             </h1>
 
             <div className="mt-5 space-y-4 text-right">
@@ -38,6 +43,47 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+
+      {importedContactPage?.contentMarkdown && (
+        <div className="rounded-[28px] bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-soft text-right">
+          <h2 className="text-xl font-black text-slate-900 dark:text-white font-tajawal mb-4">
+            معلومات التواصل الرسمية
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400 whitespace-pre-line">
+            {importedContactPage.contentMarkdown}
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3 justify-end">
+            <a
+              href="https://www.facebook.com/profile.php?id=100095629504638"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
+            >
+              <Facebook className="w-4 h-4" />
+              صفحة الفيسبوك
+            </a>
+            <a
+              href="https://www.moadla.com/Site/donate"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold"
+            >
+              <ExternalLink className="w-4 h-4" />
+              دعم الموقع
+            </a>
+            <a
+              href="https://www.moadla.com/Site/Website-rating"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-white text-xs font-bold"
+            >
+              <Phone className="w-4 h-4" />
+              تقييم الموقع
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

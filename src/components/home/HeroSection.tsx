@@ -89,16 +89,19 @@ export default function HeroSection({ heroData, statsData }: HeroSectionProps) {
   };
 
   const studentPhotos = normalizeStudentPhotos(heroData?.studentPhotos);
+  const hasStudentCarousel = studentPhotos.length > 1;
 
   const [activeStudentIndex, setActiveStudentIndex] = useState(0);
 
   useEffect(() => {
+    if (!hasStudentCarousel) return;
+
     const intervalId = window.setInterval(() => {
       setActiveStudentIndex((current) => (current + 1) % studentPhotos.length);
-    }, 6000);
+    }, 5000);
 
     return () => window.clearInterval(intervalId);
-  }, [studentPhotos.length]);
+  }, [hasStudentCarousel, studentPhotos.length]);
 
   const stats = statsData && statsData.length > 0 ? statsData : [
     { id: '1', number: '+15,000', label: 'طالب يثق بالمنصة' },
@@ -200,7 +203,53 @@ export default function HeroSection({ heroData, statsData }: HeroSectionProps) {
           {/* Left Column: Visual Interactive Graphic Cards or Uploaded Image */}
           <div className="lg:col-span-5 relative">
             <div className="relative mx-auto max-w-md lg:max-w-none">
-              {heroImage ? (
+              {studentPhotos.length > 0 ? (
+                <div className="relative overflow-hidden rounded-[32px] border border-slate-200/80 bg-slate-950 shadow-[0_35px_80px_rgba(15,23,42,0.18)] ring-1 ring-white/10">
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-500/15 via-sky-500/10 to-emerald-500/10" />
+
+                  <div className="relative aspect-[4/6] overflow-hidden">
+                    {studentPhotos.map((photo, index) => (
+                      <div
+                        key={`${photo.url}-${index}`}
+                        className={`absolute inset-0 transition-all duration-1500 ease-out ${
+                          index === activeStudentIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+                        }`}
+                      >
+                        <img
+                          src={photo.url}
+                          alt={photo.label || `طالب ${index + 1}`}
+                          className="h-full w-full object-cover"
+                        />
+
+                        {photo.label && (
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-4 pb-5 pt-12 text-white">
+                            <div className="text-lg font-black leading-tight">{photo.label}</div>
+                            {photo.details && (
+                              <div className="text-xs text-white/85 mt-1">{photo.details}</div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {studentPhotos.length > 1 && (
+                    <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+                      {studentPhotos.map((photo, index) => (
+                        <button
+                          key={`${photo.url}-dot-${index}`}
+                          type="button"
+                          aria-label={`عرض صورة الطالب ${index + 1}`}
+                          onClick={() => setActiveStudentIndex(index)}
+                          className={`h-2.5 rounded-full transition-all ${
+                            index === activeStudentIndex ? 'w-8 bg-white' : 'w-2.5 bg-white/50'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : heroImage ? (
                 <div className="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl relative aspect-video sm:aspect-auto">
                   <img
                     src={heroImage}
@@ -213,7 +262,7 @@ export default function HeroSection({ heroData, statsData }: HeroSectionProps) {
                   <div className="absolute inset-0 bg-gradient-to-br from-brand-500/15 via-sky-500/10 to-emerald-500/10" />
 
                   <div className="relative aspect-[4/6] overflow-hidden">
-                    {studentPhotos.map((photo, index) => (
+                    {defaultStudentPhotos.map((photo, index) => (
                       <div
                         key={`${photo.url}-${index}`}
                         className={`absolute inset-0 transition-all duration-1500 ease-out ${

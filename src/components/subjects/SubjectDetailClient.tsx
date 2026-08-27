@@ -101,10 +101,10 @@ export default function SubjectDetailClient({
       description: 'الرياضيات البحتة تشمل: رياضيات 1: الجبر والهندسة الفراغية، ورياضيات 2: التفاضل والتكامل.',
       href: 'https://drive.google.com/file/d/1wXFtJHfLgfmUkrtUHDXGlECH42EJiliT/view?usp=drive_link',
     },
-    { label: 'امتحانات الأعوام السابقة', href: 'https://www.moadla.com/Engineering/Subjects/Calculus/Calculus-exams' },
-    { label: 'أساسيات الرياضيات', href: 'https://www.moadla.com/Engineering/Subjects/Algebra-and-Geometry/Basics-of-mathematics' },
+    { label: 'امتحانات الأعوام السابقة للمعادلة', href: `/subjects/${subject.slug}/exams` },
+    { label: 'مدرسين اونلاين', href: `/subjects/${subject.slug}/teachers` },
     { label: 'Geogebra', href: 'https://www.geogebra.org/t/calculus' },
-    { label: 'آلة حاسبة للمعادلات التفاضلية', href: 'https://ar.symbolab.com/solver/ordinary-differential-equation-calculator' },
+    { label: 'مراجعة التفاضل والتكامل', href: `/subjects/${subject.slug}/re-calculus` },
   ];
 
   const trigonometryRules = [
@@ -252,25 +252,28 @@ export default function SubjectDetailClient({
               ما هي الكتب الخارجية المستخدمة لدراسة مادة التفاضل والتكامل؟
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {calculusResources.map((resource) => (
-                <a
-                  key={resource.label}
-                  href={resource.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-start justify-between gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 px-4 py-3 text-sm font-bold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/50 transition-colors"
-                >
-                  <div className="space-y-1">
-                    <span className="block">{resource.label}</span>
-                    {resource.description && (
-                      <span className="block text-[11px] font-medium text-slate-600 dark:text-slate-300 leading-relaxed">
-                        {resource.description}
-                      </span>
-                    )}
-                  </div>
-                  <ArrowLeft className="w-4 h-4 mt-1 shrink-0" />
-                </a>
-              ))}
+              {calculusResources.map((resource) => {
+                const isInternalRoute = resource.href.startsWith('/');
+                return (
+                  <Link
+                    key={resource.label}
+                    href={resource.href}
+                    target={isInternalRoute ? undefined : '_blank'}
+                    rel={isInternalRoute ? undefined : 'noreferrer'}
+                    className="flex items-start justify-between gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 px-4 py-3 text-sm font-bold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/50 transition-colors"
+                  >
+                    <div className="space-y-1">
+                      <span className="block">{resource.label}</span>
+                      {resource.description && (
+                        <span className="block text-[11px] font-medium text-slate-600 dark:text-slate-300 leading-relaxed">
+                          {resource.description}
+                        </span>
+                      )}
+                    </div>
+                    <ArrowLeft className="w-4 h-4 mt-1 shrink-0" />
+                  </Link>
+                );
+              })}
             </div>
           </div>
 

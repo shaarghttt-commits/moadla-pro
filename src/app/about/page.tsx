@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import prisma from '@/lib/prisma';
 import {
   GraduationCap,
   Target,
@@ -15,7 +16,19 @@ export const metadata: Metadata = {
   description: 'تعرف على رسالة ورؤية منصة Moadla Pro في تأهيل طلاب الدبلومات والمعاهد الفنية لاجتياز امتحانات معادلات كليات الهندسة والحاسبات والتجارة والزراعة.',
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const importedAboutPage = await prisma.customPage
+    .findUnique({
+      where: { slug: 'about-source' },
+    })
+    .catch(() => null);
+
+  const importedDescription =
+    importedAboutPage?.description ||
+    'انطلقت منصة Moadla Pro برؤية واضحة: تمكين كل طالب طموح من الدبلومات الفنية والمعاهد من اجتياز امتحانات المعادلة بجدارة والالتحاق بكبرى كليات الجامعات الحكومية المصرية.';
+
+  const importedContent = importedAboutPage?.contentMarkdown || '';
+
   return (
     <div className="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
       {/* Hero Header */}
@@ -25,10 +38,10 @@ export default function AboutPage() {
           <span>عن منصة Moadla Pro</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white font-tajawal">
-          شريكك الموثوق لتحقيق حلمك الجامعي
+          {importedAboutPage?.title || 'شريكك الموثوق لتحقيق حلمك الجامعي'}
         </h1>
         <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
-          انطلقت منصة Moadla Pro برؤية واضحة: تمكين كل طالب طموح من الدبلومات الفنية والمعاهد من اجتياز امتحانات المعادلة بجدارة والالتحاق بكبرى كليات الجامعات الحكومية المصرية.
+          {importedDescription}
         </p>
       </div>
 
@@ -58,6 +71,17 @@ export default function AboutPage() {
           </p>
         </div>
       </div>
+
+      {importedContent && (
+        <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 shadow-soft">
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white font-tajawal mb-4">
+            معلومات من الموقع المصدر
+          </h2>
+          <div className="whitespace-pre-line text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            {importedContent}
+          </div>
+        </div>
+      )}
 
       {/* Core Values */}
       <div className="p-8 sm:p-12 rounded-3xl bg-slate-100/70 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800 space-y-6">
