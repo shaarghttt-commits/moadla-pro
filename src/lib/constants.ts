@@ -67,11 +67,12 @@ export const DEFAULT_SETTINGS = {
 
 export const DEFAULT_NAV_ITEMS = [
   { title: 'الرئيسية', href: '/', icon: 'Home', order: 0, isVisible: true },
-  { title: 'الأقسام الأكاديمية', href: '/sections', icon: 'Layers', order: 1, isVisible: true },
+  { title: 'المعادلات', href: '/sections', icon: 'Layers', order: 1, isVisible: true },
   { title: 'المواد الدراسية', href: '/subjects', icon: 'BookOpen', order: 2, isVisible: true },
   { title: 'الامتحانات التفاعلية', href: '/exams', icon: 'FileCheck2', order: 3, isVisible: true },
-  { title: 'من نحن', href: '/about', icon: 'Info', order: 4, isVisible: true },
-  { title: 'تواصل معنا', href: '/contact', icon: 'Mail', order: 5, isVisible: true },
+  { title: 'الامتحانات السابقة', href: '/admin/files', icon: 'History', order: 4, isVisible: true },
+  { title: 'من نحن', href: '/about', icon: 'Info', order: 5, isVisible: true },
+  { title: 'تواصل معنا', href: '/contact', icon: 'Mail', order: 6, isVisible: true },
 ];
 
 export const DEFAULT_FOOTER_COLUMNS = [
@@ -81,7 +82,7 @@ export const DEFAULT_FOOTER_COLUMNS = [
     isVisible: true,
     links: [
       { title: 'الرئيسية', href: '/', isVisible: true, order: 0, openInNewTab: false },
-      { title: 'الأقسام الأكاديمية', href: '/sections', isVisible: true, order: 1, openInNewTab: false },
+      { title: 'المعادلات', href: '/sections', isVisible: true, order: 1, openInNewTab: false },
       { title: 'المواد الدراسية', href: '/subjects', isVisible: true, order: 2, openInNewTab: false },
       { title: 'الامتحانات التفاعلية', href: '/exams', isVisible: true, order: 3, openInNewTab: false },
     ],
