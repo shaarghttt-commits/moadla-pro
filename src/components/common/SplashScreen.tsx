@@ -22,7 +22,14 @@ export default function SplashScreen() {
       return;
     }
 
+    const splashDurationMs = 10000;
+    const splashStartedAt = Date.now();
+    let hasHiddenSplash = false;
+
     const hideSplash = () => {
+      if (hasHiddenSplash) return;
+      hasHiddenSplash = true;
+
       setIsVisible(false);
       window.setTimeout(() => {
         window.sessionStorage.setItem(SPLASH_STORAGE_KEY, 'true');
@@ -30,24 +37,29 @@ export default function SplashScreen() {
       }, 700);
     };
 
+    const scheduleHideAfterMinimumDuration = () => {
+      const elapsed = Date.now() - splashStartedAt;
+      const remaining = Math.max(0, splashDurationMs - elapsed);
+      window.setTimeout(hideSplash, remaining);
+    };
+
     const playAudioGreeting = () => {
       const audio = new Audio('/audio/moadla-welcome.mp3');
       audio.volume = 1;
-      audio.onended = hideSplash;
-      audio.onerror = hideSplash;
-      audio.play().catch(() => hideSplash());
+      audio.onended = scheduleHideAfterMinimumDuration;
+      audio.onerror = scheduleHideAfterMinimumDuration;
+      audio.play().catch(() => scheduleHideAfterMinimumDuration());
     };
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const revealDelay = prefersReducedMotion ? 80 : 300;
-    const fallbackSplashDuration = prefersReducedMotion ? 2200 : 6000;
 
     const revealTimer = window.setTimeout(() => {
       setIsVisible(true);
       window.setTimeout(playAudioGreeting, 450);
     }, revealDelay);
 
-    const fallbackHideTimer = window.setTimeout(hideSplash, fallbackSplashDuration);
+    const fallbackHideTimer = window.setTimeout(hideSplash, splashDurationMs);
 
     return () => {
       window.clearTimeout(revealTimer);
