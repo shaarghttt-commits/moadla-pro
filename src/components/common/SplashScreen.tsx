@@ -7,9 +7,11 @@ import { useEffect, useState } from 'react';
 const SPLASH_STORAGE_KEY = 'moadla_splash_seen';
 
 export default function SplashScreen() {
-  const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [shouldRender, setShouldRender] = useState(true);
+  const [shouldRender, setShouldRender] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return window.sessionStorage.getItem(SPLASH_STORAGE_KEY) !== 'true';
+  });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -20,27 +22,40 @@ export default function SplashScreen() {
       return;
     }
 
-    setIsMounted(true);
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const revealDelay = prefersReducedMotion ? 80 : 300;
-    const splashDuration = prefersReducedMotion ? 500 : 3600;
-
-    const revealTimer = window.setTimeout(() => setIsVisible(true), revealDelay);
-    const hideTimer = window.setTimeout(() => {
+    const hideSplash = () => {
       setIsVisible(false);
       window.setTimeout(() => {
         window.sessionStorage.setItem(SPLASH_STORAGE_KEY, 'true');
         setShouldRender(false);
-      }, 1000);
-    }, splashDuration);
+      }, 700);
+    };
+
+    const playAudioGreeting = () => {
+      const audio = new Audio('/audio/moadla-welcome.mp3');
+      audio.volume = 1;
+      audio.onended = hideSplash;
+      audio.onerror = hideSplash;
+      audio.play().catch(() => hideSplash());
+    };
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealDelay = prefersReducedMotion ? 80 : 300;
+    const fallbackSplashDuration = prefersReducedMotion ? 2200 : 6000;
+
+    const revealTimer = window.setTimeout(() => {
+      setIsVisible(true);
+      window.setTimeout(playAudioGreeting, 450);
+    }, revealDelay);
+
+    const fallbackHideTimer = window.setTimeout(hideSplash, fallbackSplashDuration);
 
     return () => {
       window.clearTimeout(revealTimer);
-      window.clearTimeout(hideTimer);
+      window.clearTimeout(fallbackHideTimer);
     };
   }, []);
 
-  if (!isMounted || !shouldRender) return null;
+  if (!shouldRender) return null;
 
   const particles = Array.from({ length: 18 });
 
