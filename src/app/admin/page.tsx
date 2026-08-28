@@ -1,8 +1,10 @@
+// Admin dashboard (server component) — detailed implementation follows.
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import AdminLayoutClient from '@/components/admin/AdminLayoutClient';
+import PagesAdmin from '@/components/PagesAdmin';
 import {
   Users,
   BookOpen,
@@ -69,6 +71,21 @@ export default async function AdminDashboardPage() {
   return (
     <AdminLayoutClient>
       <div className="space-y-8">
+        {/* Top bar */}
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white">لوحة تحكم الإدارة</h1>
+            <p className="text-sm text-slate-500">إحصائيات سريعة وإدارة المحتوى</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link href="/" className="px-3 py-2 bg-white dark:bg-slate-800 border rounded-md text-sm">عرض الموقع</Link>
+            <button className="px-3 py-2 bg-indigo-600 text-white rounded-md text-sm">تصدير تقارير</button>
+          </div>
+        </div>
+
+        {/* Grid: metrics + management */}
+        <div className="grid grid-cols-1 lg:grid-cols-8 gap-6">
+          <div className="lg:col-span-5 space-y-6">
         {/* Metric Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft space-y-1">
@@ -133,7 +150,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Quick Management Shortcuts */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft space-y-4">
+        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
           <h2 className="text-sm font-black text-slate-900 dark:text-white font-tajawal">
             إجراءات سريعة:
           </h2>
@@ -270,6 +287,17 @@ export default async function AdminDashboardPage() {
               ))}
             </div>
           </div>
+        </div>
+          </div>
+
+          {/* Right column: Pages Admin + short tools */}
+          <aside className="lg:col-span-3 space-y-4">
+            <PagesAdmin />
+            <div className="p-4 bg-white dark:bg-slate-900 border rounded-md text-sm">
+              <h4 className="font-semibold mb-2">أدوات سريعة</h4>
+              <button className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">مسح كاش</button>
+            </div>
+          </aside>
         </div>
       </div>
     </AdminLayoutClient>

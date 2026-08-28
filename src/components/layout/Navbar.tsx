@@ -44,6 +44,7 @@ export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [branding, setBranding] = useState<any>(null);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -78,6 +79,9 @@ export default function Navbar() {
     if (path === '/') return pathname === '/';
     return pathname.startsWith(path);
   };
+
+  // Do not render the navbar on the login page
+  if (pathname === '/login') return null;
 
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/85 dark:bg-slate-950/85 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">

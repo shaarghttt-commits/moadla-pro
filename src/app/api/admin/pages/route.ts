@@ -1,91 +1,50 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { getCurrentUser } from '@/lib/auth';
+import { NextResponse } from 'next/server';
+import fs from 'fs/promises';
+import path from 'path';
 
-export async function GET(request: NextRequest) {
+const PAGES_DIR = path.join(process.cwd(), 'src', 'data', 'pages');
+
+export async function GET() {
   try {
-    const user = await getCurrentUser();
-    if (!user || user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'غير مصرح بالوصول' }, { status: 401 });
-    }
-
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get('search') || '';
-
-    const where: any = {};
-    if (search) {
-      where.OR = [
-        { title: { contains: search } },
-        { slug: { contains: search } },
-      ];
-    }
-
-    const pages = await prisma.customPage.findMany({
-      where,
-      orderBy: { order: 'asc' },
-    });
-
+    await fs.mkdir(PAGES_DIR, { recursive: true });
+    const files = await fs.readdir(PAGES_DIR);
+    const pages = await Promise.all(
+      files.filter((f) => f.endsWith('.json')).map(async (f) => {
+        const raw = await fs.readFile(path.join(PAGES_DIR, f), 'utf-8');
+        const json = JSON.parse(raw);
+        return { slug: f.replace(/\.json$/, ''), title: json.title || '', updatedAt: (await fs.stat(path.join(PAGES_DIR, f))).mtime.getTime() };
+      })
+    );
     return NextResponse.json({ pages });
-  } catch (error) {
-    console.error('Error fetching admin pages:', error);
-    return NextResponse.json({ error: 'حدث خطأ أثناء جلب الصفحات' }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ pages: [] });
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const user = await getCurrentUser();
-    if (!user || user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'غير مصرح بالوصول' }, { status: 401 });
-    }
-
-    const body = await request.json();
-    const {
-      title,
-      slug,
-      description,
-      coverImage,
-      contentMarkdown,
-      blocksJson,
-      isPublished = true,
-      seoTitle,
-      seoDescription,
-      seoKeywords,
-      order = 0,
-    } = body;
-
-    if (!title || !slug) {
-      return NextResponse.json({ error: 'عنوان الصفحة والاسم اللطيف (Slug) مطلوبان' }, { status: 400 });
-    }
-
-    // Clean slug
-    const cleanSlug = slug.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
-
-    // Check unique slug
-    const existing = await prisma.customPage.findUnique({ where: { slug: cleanSlug } });
-    if (existing) {
-      return NextResponse.json({ error: 'هذا الرابط (Slug) مستخدم بالفعل، اختر اسماً آخر' }, { status: 400 });
-    }
-
-    const newPage = await prisma.customPage.create({
-      data: {
-        title,
-        slug: cleanSlug,
-        description: description || null,
-        coverImage: coverImage || null,
-        contentMarkdown: contentMarkdown || null,
-        blocksJson: typeof blocksJson === 'string' ? blocksJson : blocksJson ? JSON.stringify(blocksJson) : null,
-        isPublished,
-        seoTitle: seoTitle || null,
-        seoDescription: seoDescription || null,
-        seoKeywords: seoKeywords || null,
-        order: Number(order),
-      },
-    });
-
-    return NextResponse.json({ page: newPage }, { status: 201 });
-  } catch (error) {
-    console.error('Error creating custom page:', error);
-    return NextResponse.json({ error: 'حدث خطأ أثناء إنشاء الصفحة' }, { status: 500 });
+    const body = await req.json();
+    const { slug, title, content } = body;
+    if (!slug) return NextResponse.json({ ok: false, error: 'missing slug' }, { status: 400 });
+    await fs.mkdir(PAGES_DIR, { recursive: true });
+    const file = path.join(PAGES_DIR, `${slug}.json`);
+    await fs.writeFile(file, JSON.stringify({ title: title || '', content: content || '' }, null, 2), 'utf-8');
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const url = new URL(req.url);
+    const slug = url.searchParams.get('slug');
+    if (!slug) return NextResponse.json({ ok: false, error: 'missing' }, { status: 400 });
+    const file = path.join(PAGES_DIR, `${slug}.json`);
+    await fs.unlink(file);
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+  }
+}
+// End of filesystem-based pages API
