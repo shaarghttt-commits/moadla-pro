@@ -5,86 +5,122 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL || 'https://moadla-pro-hr96.vercel.app';
 
+  const now = new Date();
+
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}`,
-      lastModified: new Date(),
+      url: baseUrl,
+      lastModified: now,
       changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: `${baseUrl}/sections`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/subjects`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/exams`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/faq`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
   ];
 
   try {
-    const [sections, subjects, exams] = await Promise.all([
+    const [sections, subjects, exams, lessons] = await Promise.all([
       prisma.section.findMany({
-        where: { isActive: true },
-        select: { slug: true, updatedAt: true },
+        where: {
+          isActive: true,
+        },
+        select: {
+          slug: true,
+          updatedAt: true,
+        },
       }),
+
       prisma.subject.findMany({
-        where: { isActive: true },
-        select: { slug: true, updatedAt: true },
+        where: {
+          isActive: true,
+        },
+        select: {
+          slug: true,
+          updatedAt: true,
+        },
       }),
+
       prisma.exam.findMany({
-        where: { isPublished: true },
-        select: { id: true, updatedAt: true },
+        where: {
+          isPublished: true,
+        },
+        select: {
+          id: true,
+          updatedAt: true,
+        },
+      }),
+
+      prisma.lesson.findMany({
+        where: {
+          isPublished: true,
+        },
+        select: {
+          id: true,
+          updatedAt: true,
+        },
       }),
     ]);
 
-    const sectionRoutes = sections.map((s) => ({
-      url: `${baseUrl}/sections/${s.slug}`,
-      lastModified: s.updatedAt,
-      changeFrequency: 'weekly' as const,
+    const sectionRoutes: MetadataRoute.Sitemap = sections.map((section) => ({
+      url: `${baseUrl}/sections/${section.slug}`,
+      lastModified: section.updatedAt,
+      changeFrequency: 'weekly',
       priority: 0.8,
     }));
 
-    const subjectRoutes = subjects.map((s) => ({
-      url: `${baseUrl}/subjects/${s.slug}`,
-      lastModified: s.updatedAt,
-      changeFrequency: 'weekly' as const,
+    const subjectRoutes: MetadataRoute.Sitemap = subjects.map((subject) => ({
+      url: `${baseUrl}/subjects/${subject.slug}`,
+      lastModified: subject.updatedAt,
+      changeFrequency: 'weekly',
       priority: 0.8,
     }));
 
-    const examRoutes = exams.map((e) => ({
-      url: `${baseUrl}/exams/${e.id}`,
-      lastModified: e.updatedAt,
-      changeFrequency: 'weekly' as const,
+    const examRoutes: MetadataRoute.Sitemap = exams.map((exam) => ({
+      url: `${baseUrl}/exams/${exam.id}`,
+      lastModified: exam.updatedAt,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+
+    const lessonRoutes: MetadataRoute.Sitemap = lessons.map((lesson) => ({
+      url: `${baseUrl}/lessons/${lesson.id}`,
+      lastModified: lesson.updatedAt,
+      changeFrequency: 'weekly',
       priority: 0.8,
     }));
 
@@ -93,8 +129,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...sectionRoutes,
       ...subjectRoutes,
       ...examRoutes,
+      ...lessonRoutes,
     ];
-  } catch {
+  } catch (error) {
+    console.error('Sitemap generation error:', error);
+
     return staticRoutes;
   }
 }
