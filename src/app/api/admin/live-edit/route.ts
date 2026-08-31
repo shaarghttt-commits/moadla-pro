@@ -197,9 +197,9 @@ export async function POST(req: NextRequest) {
             break;
 
           case 'POST':
-            await prisma.comment.deleteMany({ where: { postId: id } });
-            await prisma.reaction.deleteMany({ where: { postId: id } });
-            await prisma.post.deleteMany({ where: { id } });
+            await prisma.discussionComment.deleteMany({ where: { postId: id } });
+            await prisma.discussionLike.deleteMany({ where: { postId: id } });
+            await prisma.discussionPost.deleteMany({ where: { id } });
             break;
 
           case 'STORY':
@@ -272,9 +272,9 @@ export async function POST(req: NextRequest) {
               break;
 
             case 'POST':
-              await prisma.comment.deleteMany({ where: { postId: id } });
-              await prisma.reaction.deleteMany({ where: { postId: id } });
-              await prisma.post.deleteMany({ where: { id } });
+              await prisma.discussionComment.deleteMany({ where: { postId: id } });
+              await prisma.discussionLike.deleteMany({ where: { postId: id } });
+              await prisma.discussionPost.deleteMany({ where: { id } });
               deletedCount++;
               break;
 
