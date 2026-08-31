@@ -59,6 +59,13 @@ export async function getCurrentUser(_req?: any) {
         lastSeenAt: true,
         isActive: true,
         createdAt: true,
+        league: true,
+        weeklyXp: true,
+        gamePoints: true,
+        currentStreak: true,
+        longestStreak: true,
+        activeFrame: true,
+        activeTitle: true,
       },
     });
 
