@@ -13,6 +13,7 @@ import {
   AlertCircle,
   CheckCircle2,
 } from 'lucide-react';
+import ImageUpload from '@/components/admin/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 
 export default function RegisterPage() {
@@ -22,6 +23,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +32,7 @@ export default function RegisterPage() {
     setError('');
     setLoading(true);
 
-    const result = await register(name, email, password, phone);
+    const result = await register(name, email, password, phone, avatar || undefined);
     if (result.success) {
       router.push('/');
     } else {
@@ -55,9 +57,6 @@ export default function RegisterPage() {
         <h1 className="text-2xl font-black text-slate-900 dark:text-white font-tajawal">
           إنشاء حساب طالب جديد
         </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          انضم إلينا وابدأ المذاكرة وخوض الامتحانات التجريبية فوراً.
-        </p>
       </div>
 
       {/* Register Card */}
@@ -70,6 +69,23 @@ export default function RegisterPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 text-center">
+              صورة الملف الشخصي (اختياري):
+            </label>
+            <div className="flex justify-center">
+              <div className="w-full max-w-[220px]">
+                <ImageUpload
+                  label=""
+                  helperText="اختر صورة بحجم حتى 10MB"
+                  aspectRatio="square"
+                  onUploadSuccess={(url) => setAvatar(url)}
+                  onRemove={() => setAvatar('')}
+                />
+              </div>
+            </div>
+          </div>
+
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
               الاسم الكامل:
@@ -138,12 +154,22 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          <div className="p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 text-indigo-900 dark:text-indigo-200 text-xs font-medium space-y-1">
+            <div className="flex items-center gap-1.5 font-bold text-indigo-700 dark:text-indigo-300">
+              <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0" />
+              <span>إصدار رقم الجلوس الرسمي للطلاب 📋</span>
+            </div>
+            <p className="text-[11px] leading-relaxed text-indigo-800/80 dark:text-indigo-300/80">
+              سيتم إصدار رقم جلوس خاص بك فور إتمام التسجيل لاستخدامه في أداء امتحانات المعادلة الإلكترونية ومحاكي البابل شيت.
+            </p>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
             className="w-full py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-brand-600/20 flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
           >
-            <span>{loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب جديد'}</span>
+            <span>{loading ? 'جاري إنشاء الحساب ورقم الجلوس...' : 'إنشاء حساب جديد'}</span>
             <ArrowLeft className="w-4 h-4" />
           </button>
         </form>

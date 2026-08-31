@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import { getCurrentUser } from '@/lib/auth';
 import {
   Cpu,
   Laptop,
@@ -16,12 +17,15 @@ export const revalidate = 0;
 
 export const metadata = {
   title: 'الأقسام والمسارات الأكاديمية | Moadla Pro',
-  description: 'استكشف مسارات امتحانات المعادلات: معادلة الهندسة، الحاسبات، التجارة، والزراعة مع تفاصيل المواد والمناهج.',
+  description: 'استكشف مسارات امتحانات المواد: معادلة الهندسة، الحاسبات، التجارة، والزراعة مع تفاصيل المواد والمناهج.',
 };
 
 export default async function SectionsPage() {
+  const currentUser = await getCurrentUser();
   const rawSections = await prisma.section.findMany({
-    where: { isActive: true },
+    where: {
+      isActive: true,
+    },
     orderBy: { order: 'asc' },
     include: {
       subjects: {
@@ -56,19 +60,6 @@ export default async function SectionsPage() {
 
   return (
     <div className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 text-xs font-extrabold uppercase">
-          <GraduationCap className="w-4 h-4" />
-          <span>المسارات الأكاديمية المعتمدة</span>
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white font-tajawal">
-          جميع أقسام امتحانات المعادلات
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
-          اختر كليتك المستهدفة واطّلع على المواد الدراسية، الوحدات والدروس، والامتحانات التفاعلية المؤهلة للقبول.
-        </p>
-      </div>
 
       {/* Sections Cards Full View */}
       <div className="space-y-12">
@@ -110,30 +101,33 @@ export default async function SectionsPage() {
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {section.subjects.map((sub) => (
-                  <Link
-                    key={sub.id}
-                    href={`/subjects/${sub.slug}`}
-                    className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-brand-50/50 dark:hover:bg-brand-950/30 border border-slate-200/60 dark:border-slate-800 transition-all hover:border-brand-500/40 group flex flex-col justify-between"
-                  >
-                    <div>
-                      <h4 className="font-bold text-sm text-slate-800 dark:text-slate-200 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
-                        {sub.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                        {sub.description}
-                      </p>
-                    </div>
+                {section.subjects.map((sub) => {
+                  const href = currentUser && currentUser.role === 'ADMIN' ? `/subjects/${sub.slug}/manage` : `/subjects/${sub.slug}`;
+                  return (
+                    <Link
+                      key={sub.id}
+                      href={href}
+                      className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-brand-50/50 dark:hover:bg-brand-950/30 border border-slate-200/60 dark:border-slate-800 transition-all hover:border-brand-500/40 group flex flex-col justify-between"
+                    >
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-800 dark:text-slate-200 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                          {sub.title}
+                        </h4>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                          {sub.description}
+                        </p>
+                      </div>
 
-                    <div className="mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                      <span>{sub._count.units} وحدات دراسية</span>
-                      <span className="text-brand-600 dark:text-brand-400 font-bold group-hover:underline flex items-center gap-1">
-                        <span>فتح المادة</span>
-                        <ArrowLeft className="w-3 h-3" />
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div className="mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+                        <span>{sub._count.units} وحدات دراسية</span>
+                        <span className="text-brand-600 dark:text-brand-400 font-bold group-hover:underline flex items-center gap-1">
+                          <span>فتح المادة</span>
+                          <ArrowLeft className="w-3 h-3" />
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>

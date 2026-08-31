@@ -59,8 +59,8 @@ export default async function LessonPage({ params }: PageProps) {
   }
 
   // Determine prev and next lesson
-  const allSubjectLessons = lesson.unit.subject.units.flatMap((u) => u.lessons);
-  const currentIndex = allSubjectLessons.findIndex((l) => l.id === lesson.id);
+  const allSubjectLessons = lesson.unit.subject.units.flatMap((u: any) => u.lessons);
+  const currentIndex = allSubjectLessons.findIndex((l: any) => l.id === lesson.id);
   const prevLesson = currentIndex > 0 ? allSubjectLessons[currentIndex - 1] : null;
   const nextLesson =
     currentIndex < allSubjectLessons.length - 1 ? allSubjectLessons[currentIndex + 1] : null;
@@ -71,7 +71,7 @@ export default async function LessonPage({ params }: PageProps) {
   let completedLessonIds: string[] = [];
 
   if (currentUser) {
-    const allLessonIds = allSubjectLessons.map((l) => l.id);
+    const allLessonIds = allSubjectLessons.map((l: any) => l.id);
     const completedRecords = await prisma.lessonProgress.findMany({
       where: {
         userId: currentUser.id,
@@ -80,7 +80,7 @@ export default async function LessonPage({ params }: PageProps) {
       },
       select: { lessonId: true },
     });
-    completedLessonIds = completedRecords.map((r) => r.lessonId);
+    completedLessonIds = completedRecords.map((r: any) => r.lessonId);
     isCompleted = completedLessonIds.includes(lesson.id);
 
     const favRecord = await prisma.favorite.findUnique({

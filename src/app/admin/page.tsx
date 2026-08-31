@@ -223,7 +223,7 @@ export default async function AdminDashboardPage() {
             </div>
 
             <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
-              {recentStudents.map((stu) => (
+              {recentStudents.map((stu: any) => (
                 <div key={stu.id} className="py-3 flex items-center justify-between gap-3 text-xs">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-xs">
@@ -256,7 +256,7 @@ export default async function AdminDashboardPage() {
             </div>
 
             <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
-              {recentAttempts.map((att) => (
+              {recentAttempts.map((att: any) => (
                 <div key={att.id} className="py-3 flex items-center justify-between gap-3 text-xs">
                   <div className="flex items-center gap-3 truncate">
                     {att.isPassed ? (

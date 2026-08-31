@@ -171,7 +171,7 @@ export default function AdminSectionsPage() {
               </h2>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              إضافة وتعديل وحذف مسارات المعادلات المتاحة بالمنصة (هندسة، تجارة، زراعة، حقوق، إلخ).
+              إضافة وتعديل وحذف مسارات المواد المتاحة بالمنصة (هندسة، تجارة، زراعة، حقوق، إلخ).
             </p>
           </div>
 

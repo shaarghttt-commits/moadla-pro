@@ -701,7 +701,7 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">عنوان بطاقة "أنواع المعادلات"</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">عنوان بطاقة "أنواع المواد"</label>
                   <input
                     type="text"
                     value={settings.filesPage?.equationTypeLabel || ''}

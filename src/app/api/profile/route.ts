@@ -10,13 +10,17 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
     }
 
-    const { name, phone, bio, avatar, currentPassword, newPassword } = await req.json();
+    const { name, username, phone, bio, avatar, coverPhoto, department, yearOfStudy, currentPassword, newPassword } = await req.json();
 
     const updateData: any = {};
     if (name) updateData.name = name.trim();
+    if (username !== undefined) updateData.username = username ? username.trim().replace(/\s+/g, '').toLowerCase() : null;
     if (phone !== undefined) updateData.phone = phone ? phone.trim() : null;
     if (bio !== undefined) updateData.bio = bio ? bio.trim() : null;
     if (avatar !== undefined) updateData.avatar = avatar;
+    if (coverPhoto !== undefined) updateData.coverPhoto = coverPhoto;
+    if (department !== undefined) updateData.department = department ? department.trim() : null;
+    if (yearOfStudy !== undefined) updateData.yearOfStudy = yearOfStudy ? yearOfStudy.trim() : null;
 
     // Handle password change if requested
     if (newPassword) {
@@ -60,10 +64,15 @@ export async function PUT(req: NextRequest) {
         id: true,
         name: true,
         email: true,
+        username: true,
         role: true,
         phone: true,
         bio: true,
         avatar: true,
+        department: true,
+        yearOfStudy: true,
+        isOnline: true,
+        lastSeenAt: true,
         isActive: true,
         createdAt: true,
       },

@@ -38,7 +38,7 @@ export default function FAQPage() {
           <span>مركز المساعدة والإرشادات</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-tajawal">
-          الأسئلة الأكثر شيوعاً حول المعادلات
+          الأسئلة الأكثر شيوعاً حول المواد
         </h1>
         <p className="text-xs sm:text-sm text-slate-500">
           إليك أهم الإجابات والمعلومات الأكاديمية التي تهمك في رحلتك للتحضير لامتحانات المعادلة.

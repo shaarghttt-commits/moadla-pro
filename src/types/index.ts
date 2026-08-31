@@ -2,10 +2,19 @@ export interface UserSession {
   id: string;
   name: string;
   email: string;
+  username?: string | null;
   role: 'STUDENT' | 'ADMIN' | string;
   phone?: string | null;
   bio?: string | null;
   avatar?: string | null;
+  department?: string | null;
+  yearOfStudy?: string | null;
+  seatNumber?: string | null;
+  gamePoints?: number;
+  gameWins?: number;
+  currentStreak?: number;
+  isOnline?: boolean;
+  lastSeenAt?: Date | string | null;
   isActive: boolean;
   createdAt: Date | string;
 }
@@ -47,6 +56,7 @@ export interface UnitType {
   description?: string | null;
   order: number;
   subjectId: string;
+  subject?: SubjectType | null;
   lessons?: LessonType[];
 }
 

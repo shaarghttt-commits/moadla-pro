@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Trophy, Award, Sparkles, TrendingUp, CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react';
 
 type StudentGrade = {
   label: string;
@@ -20,7 +21,7 @@ interface SuccessfulStudentsPanelProps {
 
 export default function SuccessfulStudentsPanel({ students }: SuccessfulStudentsPanelProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const visibleStudents = students.slice(0, 6);
+  const visibleStudents = students.slice(0, 8);
 
   useEffect(() => {
     if (visibleStudents.length <= 1) return;
@@ -35,19 +36,11 @@ export default function SuccessfulStudentsPanel({ students }: SuccessfulStudents
   const student = visibleStudents[activeIndex] ?? visibleStudents[0];
 
   if (!student) {
-    return (
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-[30px] border border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-brand-50 shadow-[0_20px_50px_rgba(16,185,129,0.08)] p-5 sm:p-7">
-          <div className="rounded-2xl border border-dashed border-emerald-200 bg-white/60 px-4 py-8 text-center text-sm text-slate-500">
-            لا توجد بيانات ناجحين متاحة حاليًا.
-          </div>
-        </div>
-      </section>
-    );
+    return null;
   }
 
   const chartWidth = 420;
-  const chartHeight = 220;
+  const chartHeight = 200;
   const padding = 24;
   const maxValue = 100;
   const chartPoints = student.grades.map((grade, gradeIndex) => {
@@ -63,42 +56,108 @@ export default function SuccessfulStudentsPanel({ students }: SuccessfulStudents
   });
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="rounded-[30px] border border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-brand-50 shadow-[0_20px_50px_rgba(16,185,129,0.08)] p-5 sm:p-7">
-        <div className="flex items-center justify-between gap-4 flex-wrap mb-6">
-          <div>
-            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] text-emerald-700/80">
-              success stories
-            </p>
-            <h2 className="mt-2 text-xl sm:text-2xl font-black text-slate-900 font-tajawal">
-              الطلاب الذين نجحوا مع المنصة
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="rounded-[36px] border border-emerald-200/80 dark:border-emerald-900/50 bg-gradient-to-br from-emerald-50/90 via-white to-brand-50/50 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950 shadow-soft p-6 sm:p-10 relative overflow-hidden backdrop-blur-xl">
+        {/* Background glow */}
+        <div className="absolute -top-24 -right-24 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Header */}
+        <div className="flex items-center justify-between gap-4 flex-wrap mb-8">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 text-xs font-black">
+              <Trophy className="w-3.5 h-3.5 text-amber-500" />
+              <span>قصص نجاح ملهمة من طلابنا</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-tajawal">
+              أوائل الطلاب الذين التحقوا بكليات الهندسة عبر المنصة
             </h2>
           </div>
 
-          <span className="inline-flex items-center justify-center min-w-[90px] px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-black">
-            {visibleStudents.length} اسم
-          </span>
+          {/* Student Selector Badges */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
+            {visibleStudents.map((s, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setActiveIndex(idx)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                  activeIndex === idx
+                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 scale-105'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                }`}
+              >
+                {s.name.split(' ')[0]} {s.name.split(' ')[1] || ''}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="rounded-[26px] border border-emerald-200/80 bg-white/80 p-4 shadow-[0_12px_30px_rgba(16,185,129,0.08)]">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-4 items-center">
-            <div className="rounded-[22px] border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-3">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-black text-emerald-700">
-                  اسم {activeIndex + 1}
-                </span>
-                <span className="text-[10px] font-bold text-slate-500">مؤشرات الأداء</span>
+        {/* Content Card */}
+        <div className="rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-6 sm:p-8 shadow-soft">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Student Info & Grades */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="relative shrink-0">
+                  <img
+                    src={student.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80'}
+                    alt={student.name}
+                    className="h-20 w-20 rounded-2xl object-cover border-2 border-emerald-400 shadow-md ring-4 ring-emerald-100 dark:ring-emerald-950"
+                  />
+                  <span className="absolute -bottom-2 -left-2 flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-600 text-xs font-black text-white shadow-sm">
+                    🥇
+                  </span>
+                </div>
+
+                <div className="min-w-0 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-tajawal truncate">
+                      {student.name}
+                    </h3>
+                    <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                  </div>
+                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    معادلة كلية الهندسة • دفعة {student.year || 2025}
+                  </p>
+                </div>
               </div>
 
-              <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-40 w-full overflow-visible">
-                {[0, 25, 50, 75, 100].map((tick) => {
-                  const y = chartHeight - padding - ((tick / maxValue) * (chartHeight - padding * 2));
+              {/* Grades Grid */}
+              <div className="grid grid-cols-3 gap-2.5">
+                {student.grades.map((grade) => (
+                  <div
+                    key={`${student.name}-${grade.label}`}
+                    className="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-800/80 p-3 text-center"
+                  >
+                    <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 truncate">
+                      {grade.label}
+                    </p>
+                    <p className="mt-1 text-xl font-black text-emerald-600 dark:text-emerald-400 font-tajawal">
+                      {grade.value}%
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
+            {/* Performance SVG Curve */}
+            <div className="lg:col-span-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-4">
+              <div className="mb-3 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
+                <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>المنحنى التراكمي لدرجات المواد</span>
+                </span>
+                <span>المجموع الكلي: 94.6%</span>
+              </div>
+
+              <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-44 w-full overflow-visible">
+                {[0, 50, 100].map((tick) => {
+                  const y = chartHeight - padding - ((tick / maxValue) * (chartHeight - padding * 2));
                   return (
                     <g key={tick}>
-                      <line x1={padding} x2={chartWidth - padding} y1={y} y2={y} stroke="#dbeafe" strokeDasharray="4 6" />
-                      <text x={8} y={y + 4} fontSize="10" fill="#64748b" textAnchor="start">
-                        {tick}
+                      <line x1={padding} x2={chartWidth - padding} y1={y} y2={y} stroke="currentColor" className="text-slate-200 dark:text-slate-700" strokeDasharray="4 6" />
+                      <text x={8} y={y + 4} fontSize="10" fill="currentColor" className="text-slate-400" textAnchor="start">
+                        {tick}%
                       </text>
                     </g>
                   );
@@ -107,7 +166,7 @@ export default function SuccessfulStudentsPanel({ students }: SuccessfulStudents
                 <polyline
                   fill="none"
                   stroke="#10b981"
-                  strokeWidth="4"
+                  strokeWidth="3.5"
                   strokeLinejoin="round"
                   strokeLinecap="round"
                   points={chartPoints.join(' ')}
@@ -124,54 +183,14 @@ export default function SuccessfulStudentsPanel({ students }: SuccessfulStudents
 
                   return (
                     <g key={`${student.name}-${grade.label}`}>
-                      <circle cx={x} cy={y} r="4" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
-                      <text x={x} y={chartHeight - 4} fontSize="10" textAnchor="middle" fill="#64748b">
+                      <circle cx={x} cy={y} r="5" fill="#10b981" stroke="#ffffff" strokeWidth="2.5" />
+                      <text x={x} y={chartHeight - 4} fontSize="9" textAnchor="middle" fill="currentColor" className="text-slate-500 dark:text-slate-400 font-bold">
                         {grade.label.replace('رياضة ', 'ر')}
                       </text>
                     </g>
                   );
                 })}
               </svg>
-            </div>
-
-            <div>
-              <div className="flex items-center gap-4 border-b border-emerald-100 pb-4">
-                <div className="relative">
-                  <img
-                    src={student.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80'}
-                    alt={student.name}
-                    className="h-20 w-20 rounded-full object-cover border-4 border-emerald-100 shadow-md"
-                  />
-                  <span className="absolute -bottom-1 -left-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-[11px] font-black text-white shadow-sm">
-                    {activeIndex + 1}
-                  </span>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 font-tajawal break-words">
-                    {student.name}
-                  </h3>
-                  <p className="mt-1 text-xs font-semibold text-slate-500">
-                    معادلة كلية الهندسة • سنة {student.year || 2025}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                {student.grades.map((grade) => (
-                  <div
-                    key={`${student.name}-${grade.label}`}
-                    className="rounded-2xl border border-slate-200 bg-slate-50/80 px-3 py-2"
-                  >
-                    <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-500">
-                      {grade.label}
-                    </p>
-                    <p className="mt-1 text-lg font-black text-slate-900 font-tajawal">
-                      {grade.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>

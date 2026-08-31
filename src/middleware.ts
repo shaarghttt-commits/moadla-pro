@@ -15,7 +15,10 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/profile') ||
     pathname.startsWith('/favorites') ||
-    pathname.startsWith('/notifications');
+    pathname.startsWith('/notifications') ||
+    pathname.startsWith('/friends') ||
+    pathname.startsWith('/messages') ||
+    pathname.startsWith('/students');
 
   if (!isAdminRoute && !isProtectedRoute) {
     return NextResponse.next();
@@ -56,5 +59,8 @@ export const config = {
     '/profile/:path*',
     '/favorites/:path*',
     '/notifications/:path*',
+    '/friends/:path*',
+    '/messages/:path*',
+    '/students/:path*',
   ],
 };

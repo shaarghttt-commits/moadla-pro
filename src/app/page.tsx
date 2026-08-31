@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth';
 
 import HeroSection from '@/components/home/HeroSection';
 import SuccessfulStudentsPanel from '@/components/home/SuccessfulStudentsPanel';
@@ -11,6 +12,8 @@ import CTASection from '@/components/home/CTASection';
 import AdsterraAd from '@/components/ads/AdsterraAd';
 import AdsterraAd2 from '@/components/ads/AdsterraAd2';
 import AdsterraAd3 from '@/components/ads/AdsterraAd3';
+import OnlineFriendsSidebar from '@/components/home/OnlineFriendsSidebar';
+import SocialShowcaseSection from '@/components/home/SocialShowcaseSection';
 
 import {
   SectionType,
@@ -113,11 +116,11 @@ export default async function HomePage() {
 
     unit: l.unit
       ? {
-          id: l.unit.id,
-          title: l.unit.title,
-          order: l.unit.order,
-          subjectId: l.unit.subjectId,
-        }
+        id: l.unit.id,
+        title: l.unit.title,
+        order: l.unit.order,
+        subjectId: l.unit.subjectId,
+      }
       : undefined,
   }));
 
@@ -164,14 +167,14 @@ export default async function HomePage() {
 
     subject: e.subject
       ? {
-          id: e.subject.id,
-          title: e.subject.title,
-          slug: e.subject.slug,
-          description: e.subject.description,
-          sectionId: e.subject.sectionId,
-          order: e.subject.order,
-          isActive: e.subject.isActive,
-        }
+        id: e.subject.id,
+        title: e.subject.title,
+        slug: e.subject.slug,
+        description: e.subject.description,
+        sectionId: e.subject.sectionId,
+        order: e.subject.order,
+        isActive: e.subject.isActive,
+      }
       : null,
   }));
 
@@ -201,14 +204,14 @@ export default async function HomePage() {
 
     lesson: f.lesson
       ? {
-          id: f.lesson.id,
-          title: f.lesson.title,
-          slug: f.lesson.slug,
-          durationMinutes: f.lesson.durationMinutes,
-          order: f.lesson.order,
-          isFree: f.lesson.isFree,
-          unitId: f.lesson.unitId,
-        }
+        id: f.lesson.id,
+        title: f.lesson.title,
+        slug: f.lesson.slug,
+        durationMinutes: f.lesson.durationMinutes,
+        order: f.lesson.order,
+        isFree: f.lesson.isFree,
+        unitId: f.lesson.unitId,
+      }
       : undefined,
   }));
 
@@ -266,46 +269,46 @@ export default async function HomePage() {
 
       grades:
         Array.isArray(student?.grades) &&
-        student.grades.length > 0
+          student.grades.length > 0
           ? student.grades.map((grade: any) => ({
-              label: String(
-                grade?.label || 'مادة'
-              ),
+            label: String(
+              grade?.label || 'مادة'
+            ),
 
-              value:
-                Number(grade?.value) || 0,
-            }))
+            value:
+              Number(grade?.value) || 0,
+          }))
           : [
-              {
-                label: 'الإنجليزية',
-                value: 88,
-              },
+            {
+              label: 'الإنجليزية',
+              value: 88,
+            },
 
-              {
-                label: 'الفيزياء',
-                value: 90,
-              },
+            {
+              label: 'الفيزياء',
+              value: 90,
+            },
 
-              {
-                label: 'الكيمياء',
-                value: 86,
-              },
+            {
+              label: 'الكيمياء',
+              value: 86,
+            },
 
-              {
-                label: 'رياضة 1',
-                value: 94,
-              },
+            {
+              label: 'رياضة 1',
+              value: 94,
+            },
 
-              {
-                label: 'رياضة 2',
-                value: 92,
-              },
+            {
+              label: 'رياضة 2',
+              value: 92,
+            },
 
-              {
-                label: 'الميكانيكا',
-                value: 89,
-              },
-            ],
+            {
+              label: 'الميكانيكا',
+              value: 89,
+            },
+          ],
     }))
 
     .filter(
@@ -356,6 +359,12 @@ export default async function HomePage() {
       id: 'sectionsGrid',
       isVisible: true,
       order: 4,
+    },
+
+    {
+      id: 'socialShowcase',
+      isVisible: true,
+      order: 4.5,
     },
 
     {
@@ -414,9 +423,9 @@ export default async function HomePage() {
 
         return saved
           ? {
-              ...defaultSection,
-              ...saved,
-            }
+            ...defaultSection,
+            ...saved,
+          }
           : defaultSection;
       }
     );
@@ -444,8 +453,64 @@ export default async function HomePage() {
   );
 
   // =========================================================
-  // RENDER HOMEPAGE SECTIONS
+  // CURRENT USER + SOCIAL SIDEBAR
   // =========================================================
+
+  const currentUser = await getCurrentUser();
+  const acceptedFriends = currentUser
+    ? await prisma.friendRequest.findMany({
+      where: {
+        OR: [{ senderId: currentUser.id }, { receiverId: currentUser.id }],
+        status: 'ACCEPTED',
+      },
+      include: {
+        sender: true,
+        receiver: true,
+      },
+    })
+    : [];
+
+  const socialFriends = currentUser
+    ? acceptedFriends.map((request) => {
+      const friend = request.senderId === currentUser.id ? request.receiver : request.sender;
+      return {
+        id: friend.id,
+        name: friend.name,
+        username: friend.username,
+        avatar: friend.avatar,
+        isOnline: friend.isOnline,
+      };
+    })
+    : [];
+
+  const sidebarFriends = currentUser
+    ? socialFriends.length > 0
+      ? socialFriends
+      : (
+        await prisma.user.findMany({
+          where: {
+            id: { not: currentUser.id },
+            role: 'STUDENT',
+            isActive: true,
+            isOnline: true,
+          },
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            avatar: true,
+            isOnline: true,
+          },
+          take: 6,
+        })
+      ).map((user) => ({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        avatar: user.avatar,
+        isOnline: user.isOnline,
+      }))
+    : [];
 
   const renderSection = (id: string) => {
     switch (id) {
@@ -513,6 +578,13 @@ export default async function HomePage() {
             sections={sections}
           />
         );
+
+      // -----------------------------------------------------
+      // SOCIAL SHOWCASE (GAMES, GROUPS, PROFILES)
+      // -----------------------------------------------------
+
+      case 'socialShowcase':
+        return <SocialShowcaseSection key="socialShowcase" />;
 
       // -----------------------------------------------------
       // FEATURES
@@ -594,16 +666,20 @@ export default async function HomePage() {
   // =========================================================
 
   return (
-    <div className="space-y-12">
-      {sortedSections
-        .filter(
-          (sec: any) =>
-            sec.isVisible !== false
-        )
-        .map(
-          (sec: any) =>
-            renderSection(sec.id)
+    <div className="mx-auto max-w-[1600px] px-4 pb-10 pt-4 sm:px-6 lg:px-8">
+      <div className="flex items-start gap-6">
+        <div className="flex-1 space-y-12">
+          {sortedSections
+            .filter((sec: any) => sec.isVisible !== false)
+            .map((sec: any) => renderSection(sec.id))}
+        </div>
+
+        {currentUser && (
+          <div className="hidden xl:block">
+            <OnlineFriendsSidebar friends={sidebarFriends} />
+          </div>
         )}
+      </div>
     </div>
   );
 }

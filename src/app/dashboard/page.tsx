@@ -17,6 +17,7 @@ import {
   Sparkles,
   ChevronLeft,
   Users,
+  MessageSquare,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { Metadata } from 'next';
@@ -80,12 +81,12 @@ export default async function DashboardPage() {
     },
   });
 
-  const completedLessonIdSet = new Set(completedLessons.map((cl) => cl.lessonId));
+  const completedLessonIdSet = new Set(completedLessons.map((cl: any) => cl.lessonId));
 
-  const subjectsWithProgress = subjects.map((sub) => {
-    const allLessonIds = sub.units.flatMap((u) => u.lessons.map((l) => l.id));
+  const subjectsWithProgress = subjects.map((sub: any) => {
+    const allLessonIds = sub.units.flatMap((u: any) => u.lessons.map((l: any) => l.id));
     const totalCount = allLessonIds.length;
-    const completedCount = allLessonIds.filter((id) => completedLessonIdSet.has(id)).length;
+    const completedCount = allLessonIds.filter((id: any) => completedLessonIdSet.has(id)).length;
     const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
     return {
       ...sub,
@@ -100,7 +101,7 @@ export default async function DashboardPage() {
   const totalAttempts = attempts.length;
   const avgScore =
     totalAttempts > 0
-      ? Math.round(attempts.reduce((acc, a) => acc + a.percentage, 0) / totalAttempts)
+      ? Math.round(attempts.reduce((acc: number, a: any) => acc + a.percentage, 0) / totalAttempts)
       : 0;
 
   // 5. Fetch favorites
@@ -133,44 +134,62 @@ export default async function DashboardPage() {
   });
 
   const engineeringSuccessNames = successfulEngineeringStudents
-    .filter((attempt) => attempt.exam.section?.slug === 'engineering')
-    .map((attempt) => attempt.user.name)
-    .filter((name, index, arr) => name && arr.indexOf(name) === index)
+    .filter((attempt: any) => attempt.exam.section?.slug === 'engineering')
+    .map((attempt: any) => attempt.user.name)
+    .filter((name: any, index: number, arr: any[]) => name && arr.indexOf(name) === index)
     .slice(0, 8);
 
   return (
     <div className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
       {/* Welcome Banner */}
-      <div className="rounded-3xl bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 text-white p-6 sm:p-10 shadow-xl border border-brand-700/40 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="absolute top-0 left-0 w-80 h-80 bg-brand-500/20 rounded-full blur-3xl" />
+      <div className="rounded-[28px] bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#1e40af] text-white p-6 sm:p-10 shadow-2xl border border-brand-700/30 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        {/* Ambient glows */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl -translate-x-1/3 -translate-y-1/3 pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-cyan-400/10 rounded-full blur-3xl translate-x-1/4 translate-y-1/4 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_50%,rgba(37,99,235,0.12),transparent_60%)] pointer-events-none" />
 
-        <div className="relative z-10 space-y-2 max-w-xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-brand-300 text-xs font-bold border border-white/10">
-            <Sparkles className="w-3.5 h-3.5" />
+        <div className="relative z-10 space-y-3 max-w-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-brand-200 text-xs font-black border border-white/15">
+            <Sparkles className="w-3.5 h-3.5 text-brand-300" />
             <span>لوحة المتابعة الأكاديمية</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black font-tajawal">
-            مرحبًا، {user.name} 👋
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black font-tajawal leading-tight">
+            مرحبًا، <span className="text-brand-300">{user.name}</span> 👋
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          <p className="text-sm text-blue-200/80 leading-relaxed">
             استمر في التحصيل والمذاكرة بثبات. إليك نظرة شاملة على مستواك الدراسي ونسب إنجازك في المواد.
           </p>
         </div>
 
-        <div className="relative z-10 flex items-center gap-3">
+        <div className="relative z-10 flex items-center gap-3 flex-wrap">
           <Link
             href="/exams"
-            className="px-5 py-3 rounded-xl bg-accent-emerald hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center gap-2 transition-all shrink-0"
+            className="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs shadow-lg shadow-emerald-700/30 flex items-center gap-2 transition-all hover:scale-105 shrink-0"
           >
             <FileCheck2 className="w-4 h-4" />
             <span>خوض امتحان جديد</span>
           </Link>
           <Link
-            href="/subjects"
-            className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs backdrop-blur-md border border-white/20 flex items-center gap-2 transition-all shrink-0"
+            href="/games"
+            className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-black text-xs backdrop-blur-md border border-white/20 flex items-center gap-2 transition-all hover:scale-105 shrink-0"
           >
-            <span>استعراض المواد</span>
+            <span>🎮</span>
+            <span>ألعاب تعليمية</span>
+          </Link>
+          <Link
+            href="/groups"
+            className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-black text-xs backdrop-blur-md border border-white/20 flex items-center gap-2 transition-all hover:scale-105 shrink-0"
+          >
+            <Users className="w-4 h-4" />
+            <span>المجموعات</span>
+          </Link>
+          <Link
+            href="/subjects"
+            className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-black text-xs backdrop-blur-md border border-white/20 flex items-center gap-2 transition-all hover:scale-105 shrink-0"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>المواد الدراسية</span>
           </Link>
         </div>
       </div>
@@ -199,52 +218,60 @@ export default async function DashboardPage() {
       )}
 
       {/* Overview Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="group p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex items-center gap-4 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-50/60 to-transparent dark:from-brand-950/40 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl pointer-events-none" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-md shadow-brand-500/30 flex-shrink-0">
             <BookOpen className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-slate-400 font-semibold">الدروس المكتملة</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white font-tajawal">
-              {totalCompletedLessons} درس
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mb-0.5">الدروس المكتملة</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white font-tajawal leading-none">
+              {totalCompletedLessons}
             </p>
+            <p className="text-xs text-slate-400 font-medium mt-0.5">درس تعليمي</p>
           </div>
         </div>
 
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-accent-emerald flex items-center justify-center font-bold">
+        <div className="group p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex items-center gap-4 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/60 to-transparent dark:from-emerald-950/40 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl pointer-events-none" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/30 flex-shrink-0">
             <FileCheck2 className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-slate-400 font-semibold">الامتحانات المنجزة</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white font-tajawal">
-              {totalAttempts} امتحان
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mb-0.5">الامتحانات المنجزة</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white font-tajawal leading-none">
+              {totalAttempts}
             </p>
+            <p className="text-xs text-slate-400 font-medium mt-0.5">امتحان تفاعلي</p>
           </div>
         </div>
 
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950 text-amber-500 flex items-center justify-center font-bold">
+        <div className="group p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex items-center gap-4 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent dark:from-amber-950/40 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl pointer-events-none" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md shadow-amber-500/30 flex-shrink-0">
             <Award className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-slate-400 font-semibold">متوسط الدرجات</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white font-tajawal">
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mb-0.5">متوسط الدرجات</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white font-tajawal leading-none">
               {avgScore}%
             </p>
+            <p className="text-xs text-slate-400 font-medium mt-0.5">في الامتحانات</p>
           </div>
         </div>
 
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950 text-accent-purple flex items-center justify-center font-bold">
+        <div className="group p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex items-center gap-4 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-50/60 to-transparent dark:from-purple-950/40 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl pointer-events-none" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-700 text-white flex items-center justify-center shadow-md shadow-purple-500/30 flex-shrink-0">
             <Bookmark className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-slate-400 font-semibold">عناصر في المفضلة</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white font-tajawal">
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mb-0.5">المحفوظات</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white font-tajawal leading-none">
               {favorites.length}
             </p>
+            <p className="text-xs text-slate-400 font-medium mt-0.5">عنصر في المفضلة</p>
           </div>
         </div>
       </div>
@@ -267,7 +294,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {subjectsWithProgress.map((sub) => (
+            {subjectsWithProgress.map((sub: any) => (
               <div
                 key={sub.id}
                 className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft space-y-4 hover:shadow-card-hover transition-all flex flex-col justify-between"
@@ -322,7 +349,7 @@ export default async function DashboardPage() {
               </h3>
 
               <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                {completedLessons.slice(0, 4).map((record) => (
+                {completedLessons.slice(0, 4).map((record: any) => (
                   <div
                     key={record.id}
                     className="py-3 flex items-center justify-between gap-4 text-xs"
@@ -331,7 +358,11 @@ export default async function DashboardPage() {
                       <CheckCircle2 className="w-4 h-4 text-accent-emerald shrink-0" />
                       <div className="truncate">
                         <Link
-                          href={`/lessons/${record.lessonId}`}
+                          href={
+                            user.role === 'ADMIN'
+                              ? `/subjects/${record.lesson.unit.subject.slug}/units/${record.lesson.unit.id}/lessons/${record.lessonId}/manage`
+                              : `/lessons/${record.lessonId}`
+                          }
                           className="font-bold text-slate-800 dark:text-slate-200 hover:text-brand-600 truncate block"
                         >
                           {record.lesson.title}
@@ -343,7 +374,11 @@ export default async function DashboardPage() {
                     </div>
 
                     <Link
-                      href={`/lessons/${record.lessonId}`}
+                      href={
+                        user.role === 'ADMIN'
+                          ? `/subjects/${record.lesson.unit.subject.slug}/units/${record.lesson.unit.id}/lessons/${record.lessonId}/manage`
+                          : `/lessons/${record.lessonId}`
+                      }
                       className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 text-slate-600 dark:text-slate-300 font-semibold shrink-0"
                     >
                       مراجعة الدرس
@@ -386,7 +421,7 @@ export default async function DashboardPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {attempts.slice(0, 5).map((att) => (
+                {attempts.slice(0, 5).map((att: any) => (
                   <div
                     key={att.id}
                     className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-2"
@@ -434,7 +469,7 @@ export default async function DashboardPage() {
 
             {engineeringSuccessNames.length > 0 ? (
               <div className="space-y-2">
-                {engineeringSuccessNames.map((name, index) => (
+                {engineeringSuccessNames.map((name: string, index: number) => (
                   <div
                     key={`${name}-${index}`}
                     className="flex items-center gap-3 rounded-2xl bg-white/80 dark:bg-slate-900/60 border border-emerald-100 dark:border-emerald-800/50 px-3 py-2.5"

@@ -60,13 +60,13 @@ export default async function ExamResultsPage({ params }: PageProps) {
     notFound();
   }
 
-  const exam = attempt.exam;
-  const correctCount = attempt.answers.filter((a) => a.isCorrect).length;
+  const exam = attempt.exam as any;
+  const correctCount = (attempt.answers as any[]).filter((a: any) => a.isCorrect).length;
   const totalQuestions = exam.questions.length;
   const incorrectCount = totalQuestions - correctCount;
 
   // Map answers by questionId for fast lookup
-  const answersMap = new Map(attempt.answers.map((a) => [a.questionId, a]));
+  const answersMap = new Map<string, any>((attempt.answers as any[]).map((a: any) => [a.questionId, a]));
 
   return (
     <div className="py-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">

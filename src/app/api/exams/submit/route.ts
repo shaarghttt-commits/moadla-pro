@@ -39,10 +39,10 @@ export async function POST(req: NextRequest) {
       isCorrect: boolean;
     }[] = [];
 
-    exam.questions.forEach((q) => {
+    exam.questions.forEach((q: any) => {
       totalPossible += q.marks;
       const selectedChoiceId = answers[q.id] || null;
-      const correctChoice = q.choices.find((c) => c.isCorrect);
+      const correctChoice = q.choices.find((c: any) => c.isCorrect);
 
       const isCorrect = correctChoice && selectedChoiceId === correctChoice.id;
       if (isCorrect) {

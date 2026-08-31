@@ -32,7 +32,7 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
   }
 }
 
-export async function getCurrentUser() {
+export async function getCurrentUser(_req?: any) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get(COOKIE_NAME)?.value;
@@ -47,10 +47,16 @@ export async function getCurrentUser() {
         id: true,
         name: true,
         email: true,
+        username: true,
         role: true,
         phone: true,
         bio: true,
         avatar: true,
+        department: true,
+        yearOfStudy: true,
+        seatNumber: true,
+        isOnline: true,
+        lastSeenAt: true,
         isActive: true,
         createdAt: true,
       },

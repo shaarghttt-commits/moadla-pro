@@ -42,3 +42,42 @@ next-env.d.ts
 *.db-wal
 prisma/dev.db
 prisma/*.db
+
+# User uploads (runtime files, not source code)
+/public/uploads/
+
+# Crawling, scraping & analysis scripts
+*.mjs
+analyze_*.mjs
+crawl_*.mjs
+download_*.mjs
+extract_*.mjs
+fetch_*.mjs
+inspect_*.mjs
+list_*.mjs
+print_*.mjs
+stream_*.mjs
+check_*.mjs
+test_*.mjs
+
+# Temporary & scratch files
+temp_*
+scratch_*
+response.html
+response.json
+*_report.json
+*_raw_pages.json
+*.html
+files.json
+temp_units.json
+calculus_main_page.html
+
+# Analysis data files
+all_algebra_files.json
+all_calculus_files.json
+mechanics_extracted_report.json
+
+# Backups & docs (local only)
+/backups/
+/docs/
+/scripts/

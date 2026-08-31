@@ -18,18 +18,21 @@ export async function GET() {
       orderBy: { order: 'asc' },
     });
 
-    const normalizedNavItems = navItems.map((item) => ({
+    const normalizedNavItems = navItems.map((item: any) => ({
       ...item,
+      title: item.title === 'المعادلات' ? 'المواد' : item.title,
       href: item.href === '/admin/files' ? '/files' : item.href,
-      children: (item.children || []).map((child) => ({
+      children: (item.children || []).map((child: any) => ({
         ...child,
+        title: child.title === 'المعادلات' ? 'المواد' : child.title,
         href: child.href === '/admin/files' ? '/files' : child.href,
       })),
     }));
 
     if (navItems.length === 0) {
-      return NextResponse.json({ navItems: DEFAULT_NAV_ITEMS.map((item) => ({
+      return NextResponse.json({ navItems: DEFAULT_NAV_ITEMS.map((item: any) => ({
         ...item,
+        title: item.title === 'المعادلات' ? 'المواد' : item.title,
         href: item.href === '/admin/files' ? '/files' : item.href,
       })) });
     }

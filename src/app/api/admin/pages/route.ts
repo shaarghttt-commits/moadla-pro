@@ -9,7 +9,7 @@ export async function GET() {
     await fs.mkdir(PAGES_DIR, { recursive: true });
     const files = await fs.readdir(PAGES_DIR);
     const pages = await Promise.all(
-      files.filter((f) => f.endsWith('.json')).map(async (f) => {
+      files.filter((f: any) => f.endsWith('.json')).map(async (f: any) => {
         const raw = await fs.readFile(path.join(PAGES_DIR, f), 'utf-8');
         const json = JSON.parse(raw);
         return { slug: f.replace(/\.json$/, ''), title: json.title || '', updatedAt: (await fs.stat(path.join(PAGES_DIR, f))).mtime.getTime() };

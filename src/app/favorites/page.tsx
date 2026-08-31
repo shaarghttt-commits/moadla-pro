@@ -32,14 +32,14 @@ export default async function FavoritesPage() {
   });
 
   const subjectIds = favorites
-    .filter((f) => f.targetType === 'SUBJECT')
-    .map((f) => f.targetId);
+    .filter((f: any) => f.targetType === 'SUBJECT')
+    .map((f: any) => f.targetId);
   const lessonIds = favorites
-    .filter((f) => f.targetType === 'LESSON')
-    .map((f) => f.targetId);
+    .filter((f: any) => f.targetType === 'LESSON')
+    .map((f: any) => f.targetId);
   const examIds = favorites
-    .filter((f) => f.targetType === 'EXAM')
-    .map((f) => f.targetId);
+    .filter((f: any) => f.targetType === 'EXAM')
+    .map((f: any) => f.targetId);
 
   const [favSubjects, favLessons, favExams] = await Promise.all([
     prisma.subject.findMany({
@@ -153,7 +153,11 @@ export default async function FavoritesPage() {
                 {favLessons.map((l) => (
                   <Link
                     key={l.id}
-                    href={`/lessons/${l.id}`}
+                    href={
+                      user.role === 'ADMIN'
+                        ? `/subjects/${l.unit.subject.slug}/units/${l.unit.id}/lessons/${l.id}/manage`
+                        : `/lessons/${l.id}`
+                    }
                     className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-500/50 shadow-soft transition-all group flex items-center justify-between gap-4"
                   >
                     <div className="space-y-1">

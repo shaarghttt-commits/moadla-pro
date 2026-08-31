@@ -97,9 +97,14 @@ export default function InteractiveExamEngine({ exam }: InteractiveExamEnginePro
     questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
 
   // Format time MM:SS
+  // Format time HH:MM:SS or MM:SS
   const formatTime = (totalSecs: number) => {
-    const mins = Math.floor(totalSecs / 60);
+    const hours = Math.floor(totalSecs / 3600);
+    const mins = Math.floor((totalSecs % 3600) / 60);
     const secs = totalSecs % 60;
+    if (hours > 0) {
+      return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
@@ -134,6 +139,14 @@ export default function InteractiveExamEngine({ exam }: InteractiveExamEnginePro
             <span>السؤال {currentIdx + 1} من {questions.length}</span>
             <span>•</span>
             <span>تمت الإجابة على ({answeredCount} من {questions.length})</span>
+            {user?.seatNumber && (
+              <>
+                <span>•</span>
+                <span className="text-slate-700 dark:text-slate-300 font-bold">
+                  رقم الجلوس: <span className="font-mono text-brand-600 dark:text-brand-400 font-black">{user.seatNumber}</span>
+                </span>
+              </>
+            )}
           </div>
         </div>
 
@@ -147,7 +160,7 @@ export default function InteractiveExamEngine({ exam }: InteractiveExamEnginePro
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span dir="ltr">{formatTime(secondsLeft)}</span>
+            <span dir="ltr" className="font-mono">{formatTime(secondsLeft)}</span>
           </div>
 
           <button

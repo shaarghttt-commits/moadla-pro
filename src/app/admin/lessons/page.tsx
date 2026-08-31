@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { LessonType, UnitType, SubjectType } from '@/types';
 import { formatDuration } from '@/lib/utils';
+import YouTubePlayer from '@/components/YouTubePlayer';
 
 export default function AdminLessonsPage() {
   const [lessons, setLessons] = useState<LessonType[]>([]);
@@ -373,6 +374,18 @@ export default function AdminLessonsPage() {
                       placeholder="https://www.youtube.com/embed/..."
                       className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                      معاينة الفيديو:
+                    </label>
+                    <div className="w-full">
+                      {/* Dynamically show preview using YouTubePlayer */}
+                      {/* Import is client-side; file is in components */}
+                      {/* @ts-ignore-next-line */}
+                      <YouTubePlayer url={videoUrl} title={title} />
+                    </div>
                   </div>
 
                   <div>

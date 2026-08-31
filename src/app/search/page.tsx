@@ -14,11 +14,15 @@ import {
   Layers,
 } from 'lucide-react';
 import { formatDuration } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams.get('q') || '';
+
+  // auth for admin links
+  const { user } = useAuth();
 
   const [query, setQuery] = useState(initialQuery);
   const [activeTab, setActiveTab] = useState<'all' | 'subjects' | 'lessons' | 'exams' | 'files'>('all');
@@ -218,7 +222,11 @@ function SearchContent() {
                 {results.lessons.map((l) => (
                   <Link
                     key={l.id}
-                    href={`/lessons/${l.id}`}
+                    href={
+                      user?.role === 'ADMIN'
+                        ? `/subjects/${l.unit?.subject?.slug}/units/${l.unit?.id}/lessons/${l.id}/manage`
+                        : `/lessons/${l.id}`
+                    }
                     className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-500/50 shadow-soft transition-all group flex flex-col justify-between"
                   >
                     <div>

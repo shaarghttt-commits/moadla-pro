@@ -11,6 +11,11 @@ import {
   Youtube,
   Send,
   MessageCircle,
+  Swords,
+  Users,
+  ShieldCheck,
+  Sparkles,
+  Heart,
 } from 'lucide-react';
 import { DEFAULT_FOOTER_COLUMNS } from '@/lib/constants';
 
@@ -57,7 +62,47 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-slate-950 text-slate-300 border-t border-slate-900 mt-20">
+    <footer className="bg-slate-950 text-slate-300 border-t border-slate-800/80 mt-24 relative overflow-hidden">
+      {/* Subtle Ambient Background Light */}
+      <div className="absolute top-0 right-1/3 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Top Interactive Community Banner */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+        <div className="rounded-3xl bg-gradient-to-r from-brand-900/60 via-indigo-950/70 to-slate-900/90 border border-brand-700/40 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl backdrop-blur-xl">
+          <div className="space-y-1.5 text-center md:text-right">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-bold border border-brand-500/30">
+              <Sparkles className="w-3.5 h-3.5 text-brand-400" />
+              <span>مجتمع Moadla Pro التفاعلي</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-white font-tajawal">
+              جاهز لتجربة الألعاب والمبارزات العلمية مع زملائك؟
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300">
+              انضم لآلاف الطلاب في مجموعات المذاكرة التفاعلية وساحة التحديات 1v1 الآن!
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
+            <Link
+              href="/games"
+              className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all hover:scale-105"
+            >
+              <Swords className="w-4 h-4" />
+              <span>ساحة الألعاب 🎮</span>
+            </Link>
+            <Link
+              href="/groups"
+              className="px-6 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-2 border border-slate-700 transition-all hover:scale-105"
+            >
+              <Users className="w-4 h-4 text-indigo-400" />
+              <span>المجموعات 👥</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Col 1: Brand & Bio */}
@@ -76,7 +121,7 @@ export default function Footer() {
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-400 font-medium -mt-1">
-                  منصة معادلات الجامعات الأولى
+                  منصة معادلات الجامعات الأولى بمصر
                 </span>
               </div>
             </Link>
@@ -85,13 +130,13 @@ export default function Footer() {
               المنصة الأحدث والأشمل لطلاب الدبلومات الفنية والمعاهد للاستعداد والقبول في كليات الهندسة والحاسبات والتجارة والزراعة مع أفضل الأساتذة والامتحانات التفاعلية.
             </p>
 
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-2.5 pt-2">
               <a
                 href="https://www.facebook.com/4543534543hjhg?locale=ar_AR"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="فيسبوك"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-brand-600 text-slate-400 hover:text-white flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-2xl bg-slate-900 hover:bg-brand-600 text-slate-400 hover:text-white flex items-center justify-center transition-all border border-slate-800"
               >
                 <Facebook className="w-4 h-4" />
               </a>
@@ -100,7 +145,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="يوتيوب"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-red-600 text-slate-400 hover:text-white flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-2xl bg-slate-900 hover:bg-red-600 text-slate-400 hover:text-white flex items-center justify-center transition-all border border-slate-800"
               >
                 <Youtube className="w-4 h-4" />
               </a>
@@ -109,16 +154,16 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="تيليجرام"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-sky-500 text-slate-400 hover:text-white flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-2xl bg-slate-900 hover:bg-sky-500 text-slate-400 hover:text-white flex items-center justify-center transition-all border border-slate-800"
               >
                 <Send className="w-4 h-4" />
               </a>
               <a
-                href="https://wa.me/201070130096?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%87%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%20%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%85%20%D8%AB%D8%84%D8%A7%D9%86%D8%A8%D8%B1%D8%B3%D8%AA%20%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%91%D8%8A%D8%8A"
+                href="https://wa.me/201070130096?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="واتساب"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-400 hover:text-white flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-2xl bg-slate-900 hover:bg-emerald-600 text-slate-400 hover:text-white flex items-center justify-center transition-all border border-slate-800"
               >
                 <MessageCircle className="w-4 h-4" />
               </a>
@@ -128,14 +173,14 @@ export default function Footer() {
           {/* Dynamic Footer Columns from CMS */}
           {columns.map((col, idx) => (
             <div key={col.id || idx} className="space-y-4">
-              <h4 className="font-bold text-base text-white font-tajawal">{col.title}</h4>
+              <h4 className="font-black text-base text-white font-tajawal">{col.title}</h4>
               <ul className="space-y-2.5 text-sm text-slate-400">
                 {(col.links || []).map((link, lIdx) => (
                   <li key={lIdx}>
                     <Link
                       href={link.href}
                       target={link.openInNewTab ? '_blank' : undefined}
-                      className="hover:text-brand-400 transition-colors"
+                      className="hover:text-brand-400 transition-colors font-medium text-xs sm:text-sm"
                     >
                       {link.title}
                     </Link>
@@ -145,32 +190,34 @@ export default function Footer() {
             </div>
           ))}
 
-          {/* Fallback Contact info Column if fewer than 3 dynamic columns */}
-          {columns.length < 3 && (
-            <div className="space-y-4">
-              <h4 className="font-bold text-base text-white font-tajawal">تواصل معنا</h4>
-              <ul className="space-y-3 text-sm text-slate-400">
-                <li className="flex items-center gap-2.5">
-                  <Mail className="w-4 h-4 text-brand-400 shrink-0" />
-                  <span className="text-xs">shaarghttt@gmail.com</span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-brand-400 shrink-0" />
-                  <span className="text-xs" dir="ltr">01070130096</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                  <span className="text-xs">جمهورية مصر العربية - الشرقية</span>
-                </li>
-              </ul>
-            </div>
-          )}
+          {/* Contact info Column */}
+          <div className="space-y-4">
+            <h4 className="font-black text-base text-white font-tajawal">تواصل مع الإدارة</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-brand-400 shrink-0" />
+                <span className="text-xs">info@moadla.pro</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-brand-400 shrink-0" />
+                <span className="text-xs" dir="ltr">01070130096</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
+                <span className="text-xs">جمهورية مصر العربية</span>
+              </li>
+              <li className="flex items-center gap-2.5 pt-2 text-[11px] text-emerald-400 font-bold">
+                <ShieldCheck className="w-4 h-4" />
+                <span>منصة موثقة ومعتمدة 100%</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2022 Moadla Pro. جميع الحقوق محفوظة.</p>
-          <div className="flex items-center gap-6">
+          <p>© {new Date().getFullYear()} Moadla Pro. جميع الحقوق محفوظة لتأهيل طلاب المعادلات.</p>
+          <div className="flex items-center gap-6 font-medium">
             <Link href="/privacy" className="hover:text-slate-300 transition-colors">
               سياسة الخصوصية
             </Link>
@@ -178,7 +225,7 @@ export default function Footer() {
               شروط الاستخدام
             </Link>
             <Link href="/contact" className="hover:text-slate-300 transition-colors">
-              الدعم الفني
+              مركز المساعدة
             </Link>
           </div>
         </div>

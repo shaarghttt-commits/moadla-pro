@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         select: { id: true },
       });
 
-      const records = allUsers.map((u) => ({
+      const records = allUsers.map((u: any) => ({
         userId: u.id,
         title: title.trim(),
         message: message.trim(),

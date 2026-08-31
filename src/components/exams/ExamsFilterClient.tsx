@@ -43,9 +43,8 @@ export default function ExamsFilterClient({
     return true;
   });
 
-  const years = Array.from(
-    new Set(exams.map((e) => e.year).filter(Boolean))
-  ).sort((a, b) => Number(b) - Number(a));
+  // Fixed year range 2016..2026 (descending)
+  const years = Array.from({ length: 2026 - 2016 + 1 }, (_, i) => 2026 - i);
 
   return (
     <div className="space-y-8">
@@ -186,11 +185,11 @@ export default function ExamsFilterClient({
                 </p>
 
                 <div className="grid grid-cols-2 gap-2 pt-2 text-xs text-slate-500 dark:text-slate-400">
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 font-bold">
                     <Clock className="w-3.5 h-3.5 text-brand-500" />
-                    <span>{exam.durationMinutes} دقيقة</span>
+                    <span>{exam.durationMinutes === 120 ? 'ساعتان (120 د)' : `${exam.durationMinutes} دقيقة`}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 font-bold">
                     <Award className="w-3.5 h-3.5 text-amber-500" />
                     <span>الدرجة: {exam.totalMarks}</span>
                   </div>
@@ -198,15 +197,15 @@ export default function ExamsFilterClient({
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                <span className="text-xs text-slate-400 font-medium">
-                  {exam.questionsCount || (exam.questions ? exam.questions.length : 0)} سؤال
+                <span className="px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-black border border-emerald-200 dark:border-emerald-800">
+                  {exam.questionsCount || (exam.questions ? exam.questions.length : 50)} سؤال بابل شيت
                 </span>
                 <Link
-                  href={`/exams/${exam.id}`}
-                  className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+                  href={`/exams/${exam.id}/take`}
+                  className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-black flex items-center gap-1.5 transition-all shadow-sm"
                 >
                   <FileCheck2 className="w-3.5 h-3.5" />
-                  <span>بدء الامتحان</span>
+                  <span>دخول الامتحان ⚡</span>
                 </Link>
               </div>
             </div>

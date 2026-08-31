@@ -20,8 +20,8 @@ const tajawal = Tajawal({
 });
 
 export const metadata: Metadata = {
-  title: 'Moadla Pro | منصة معادلات الجامعات الأولى في مصر والعالم العربي',
-  description: 'المنصة التعليمية المتكاملة والشاملة للاستعداد لامتحانات معادلة كليات الهندسة، الحاسبات والمعلومات، التجارة، والزراعة مع امتحانات تفاعلية وشروحات وافية ومتابعة دقيقة لمستوى الطالب.',
+  title: 'Moadla Pro | منصة المواد الجامعية الأولى في مصر والعالم العربي',
+  description: 'المنصة التعليمية المتكاملة والشاملة للاستعداد لامتحانات المواد لكليات الهندسة، الحاسبات والمعلومات، التجارة، والزراعة مع امتحانات تفاعلية وشروحات وافية ومتابعة دقيقة لمستوى الطالب.',
   keywords: [
     'معادلة كلية الهندسة',
     'معادلة الحاسبات والمعلومات',
@@ -33,31 +33,35 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Moadla Pro Team' }],
   openGraph: {
-    title: 'Moadla Pro | منصة معادلات الجامعات الأولى',
-    description: 'طريقك للنجاح في امتحانات المعادلات يبدأ من هنا. دروس، فيديوهات، امتحانات تفاعلية، وملفات PDF.',
+    title: 'Moadla Pro | منصة المواد الجامعية الأولى',
+    description: 'طريقك للنجاح في امتحانات المواد يبدأ من هنا. دروس، فيديوهات، امتحانات تفاعلية، وملفات PDF.',
     siteName: 'Moadla Pro',
     locale: 'ar_EG',
     type: 'website',
   },
   verification: {
     google: 'Uw5ISsaH9J-tJjYoCFANTdfYxIrZpy4EfGarcK5FQZ4',
+    other: {
+      monetag: '0cd17785708b28986a9f7457698e78a6',
+    },
   },
-};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="ar" dir="rtl" className={`${cairo.variable} ${tajawal.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-brand-500 selection:text-white">
-        <ThemeProvider>
-          <AuthProvider>
-            <AppShell>{children}</AppShell>
-          </AuthProvider>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+  export default function RootLayout({
+    children,
+  }: Readonly<{
+    children: React.ReactNode;
+  }>) {
+    return (
+      <html lang="ar" dir="rtl" className={`${cairo.variable} ${tajawal.variable}`} suppressHydrationWarning>
+        <body className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-brand-500 selection:text-white">
+          {/* Removed suspicious external scripts that caused SSR/CSR hydration mismatch */}
+
+          <ThemeProvider>
+            <AuthProvider>
+              <AppShell>{children}</AppShell>
+            </AuthProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    );
 }

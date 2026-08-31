@@ -130,7 +130,7 @@ export default function FilesFilterClient({ files, sections, subjects, settings 
         </div>
 
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="rounded-[28px] bg-white border border-slate-200 shadow-[0_16px_40px_rgba(15,23,42,0.06)] p-5">
+            <div className="rounded-[28px] bg-white border border-slate-200 shadow-[0_16px_40px_rgba(15,23,42,0.06)] p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500">{settings?.lastUpdateLabel || 'آخر تحديث'}</span>
               <Calendar className="w-5 h-5 text-brand-600" />
@@ -138,7 +138,7 @@ export default function FilesFilterClient({ files, sections, subjects, settings 
             <p className="mt-5 text-4xl font-black text-slate-900">{files[0] ? new Date(files[0].createdAt).getFullYear() : '—'}</p>
           </div>
 
-          <div className="rounded-[28px] bg-white border border-slate-200 shadow-[0_16px_40px_rgba(15,23,42,0.06)] p-5">
+            <div className="rounded-[28px] bg-white border border-slate-200 shadow-[0_16px_40px_rgba(15,23,42,0.06)] p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500">{settings?.subjectCountLabel || 'المواد المتاحة'}</span>
               <BookOpen className="w-5 h-5 text-emerald-600" />
@@ -146,9 +146,9 @@ export default function FilesFilterClient({ files, sections, subjects, settings 
             <p className="mt-5 text-4xl font-black text-slate-900">{subjectCount}</p>
           </div>
 
-          <div className="rounded-[28px] bg-white border border-slate-200 shadow-[0_16px_40px_rgba(15,23,42,0.06)] p-5">
+            <div className="rounded-[28px] bg-white border border-slate-200 shadow-[0_16px_40px_rgba(15,23,42,0.06)] p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500">{settings?.equationTypeLabel || 'أنواع المعادلات'}</span>
+              <span className="text-xs font-bold text-slate-500">{settings?.equationTypeLabel || 'أنواع المواد'}</span>
               <Layers className="w-5 h-5 text-amber-500" />
             </div>
             <p className="mt-5 text-4xl font-black text-slate-900">{equationTypeCount}</p>

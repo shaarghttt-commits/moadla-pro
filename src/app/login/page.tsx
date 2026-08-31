@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   Sparkles,
   UserCheck,
+  Phone,
+  Facebook,
   AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -216,34 +218,44 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-[28px] border border-brand-400/20 bg-[linear-gradient(135deg,rgba(15,23,42,0.9),rgba(17,24,39,0.8),rgba(30,41,59,0.85))] p-4 text-center shadow-[0_16px_32px_rgba(15,23,42,0.5)]">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/80 to-transparent" />
-                <div className="absolute -right-8 top-1/2 h-16 w-16 -translate-y-1/2 rounded-full bg-brand-500/10 blur-2xl" />
-                <div className="absolute -left-8 top-1/2 h-16 w-16 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-2xl" />
+              <div className="relative overflow-hidden rounded-[24px] border border-white/6 bg-gradient-to-br from-slate-900/70 via-slate-950/60 to-slate-900/80 p-5 text-center shadow-lg">
+                <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/6 to-transparent" />
+                <div className="absolute -right-6 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-brand-500/8 blur-2xl" />
+                <div className="absolute -left-6 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-emerald-500/8 blur-2xl" />
 
                 <div className="relative">
-                  <p className="text-[10px] font-black tracking-[0.26em] text-brand-300/90">
+                  <p className="text-[10px] font-extrabold tracking-widest text-brand-300/80 uppercase">
                     DEVELOPER
                   </p>
-                  <p className="mt-2 text-xl font-black text-white font-tajawal">
+                  <p className="mt-2 text-xl font-extrabold text-white font-tajawal leading-tight">
                     م. عبد الرحمن محمد ياسر
                   </p>
-                  <p className="mt-1 text-xs text-slate-300">
-                    مطور المنصة الرقمية ومصمم تجربة المستخدم
+                  <p className="mt-1 text-sm text-slate-300 max-w-md mx-auto">
+                    مطور المنصة الرقمية · مصمم تجربة المستخدم · استشارات تحسين الأداء
                   </p>
 
-                  <a
-                    href="https://wa.me/201070130096?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%87%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%20%D9%85%D9%86%20%D9%85%D9%84%D9%85%D8%86%D8%AA%D8%B1%D8%A8%20%D9%86%D9%83%D8%B1%D8%A8%D8%AA%D9%8A%D9%88%20%D9%83%D9%85%D9%87%D9%8A%D9%86%20%D9%85%D9%84%D9%87%D8%8A%D8%8A"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold text-emerald-200 transition-all duration-200 hover:border-emerald-300/40 hover:bg-emerald-500/15 shadow-[0_8px_20px_rgba(16,185,129,0.12)]"
-                    aria-label="واتساب المطور"
-                  >
-                    <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-400/20 text-[10px] font-black text-emerald-200">
-                      W
-                    </span>
-                    <span>01070130096</span>
-                  </a>
+                  <div className="mt-4 flex items-center justify-center gap-3">
+                    <a
+                      href="https://wa.me/201070130096?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%87%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%20%D9%85%D9%86%20%D9%85%D9%84%D9%85%D8%86%D8%AA%D8%B1%D8%A8%20%D9%86%D9%83%D8%B1%D8%A8%D8%AA%D9%8A%D9%88%20%D9%83%D9%85%D9%87%D9%8A%D9%86%20%D9%85%D9%84%D9%87%D8%8A%D8%8A"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-emerald-400/12 bg-emerald-500/8 text-emerald-100 transition-transform duration-200 hover:scale-105 hover:shadow-[0_10px_30px_rgba(6,95,70,0.12)]"
+                      aria-label="واتساب المطور"
+                    >
+                      <Phone className="h-5 w-5" />
+                      <span className="sr-only">رقم واتساب المطور</span>
+                    </a>
+
+                    <a
+                      href="https://www.facebook.com/4543534543hjhg?locale=ar_AR"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/6 bg-white/3 text-white/90 transition-colors duration-200 hover:bg-white/6"
+                      aria-label="فيسبوك المطور"
+                    >
+                      <Facebook className="h-5 w-5" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

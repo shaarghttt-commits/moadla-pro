@@ -96,7 +96,7 @@ export default async function StudentExamsHistoryPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {attempts.map((att, idx) => (
+          {attempts.map((att: any, idx: number) => (
             <div
               key={att.id}
               className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-card-hover transition-all"

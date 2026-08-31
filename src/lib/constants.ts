@@ -42,15 +42,15 @@ export const DEFAULT_SETTINGS = {
     },
     {
       id: '2',
-      title: 'محاكي امتحانات البابل شيت',
+      title: 'امتحانات المعادلة الإلكترونية',
       description: 'امتحانات إلكترونية بمؤقت زمني حقيقي وتصحيح فوري مع تحليل تفصيلي لنقاط القوة والضعف.',
       icon: 'Clock',
       color: 'emerald',
     },
     {
       id: '3',
-      title: 'مذكرات وملخصات PDF شاملة',
-      description: 'تحميل مباشر لكافة المذكرات ونماذج الامتحانات السابقة المنقحة والمحدثة طبقاً لآخر تعديلات الوزارة.',
+      title: 'امتحانات المعادلة السابقة PDF',
+      description: 'تحميل مباشر لكافة نماذج الامتحانات السابقة المنقحة والمحدثة طبقاً لآخر تعديلات الوزارة.',
       icon: 'FileText',
       color: 'amber',
     },
@@ -75,7 +75,7 @@ export const DEFAULT_SETTINGS = {
     subtitle: 'تصفح الملفات المصنفة حسب نوع المعادلة، ثم داخل كل مادة ستجد الامتحانات السابقة الخاصة بها فقط.',
     lastUpdateLabel: 'آخر تحديث',
     subjectCountLabel: 'المواد المتاحة',
-    equationTypeLabel: 'أنواع المعادلات',
+    equationTypeLabel: 'أنواع المواد',
     emptyTitle: 'لا توجد ملفات منشورة حالياً',
     emptyDescription: 'سيتم إضافة الملفات والملخصات هنا فور نشرها من لوحة الإدارة.',
   },
@@ -124,9 +124,13 @@ export const DEFAULT_SETTINGS = {
 
 export const DEFAULT_NAV_ITEMS = [
   { title: 'الرئيسية', href: '/', icon: 'Home', order: 0, isVisible: true },
-  { title: 'المعادلات', href: '/sections', icon: 'Layers', order: 1, isVisible: true },
+  { title: 'المجتمع 🌐', href: '/feed', icon: 'Compass', order: 0.5, isVisible: true },
+  { title: 'المواد', href: '/sections', icon: 'Layers', order: 1, isVisible: true },
   { title: 'المواد الدراسية', href: '/subjects', icon: 'BookOpen', order: 2, isVisible: true },
   { title: 'الامتحانات التفاعلية', href: '/exams', icon: 'FileCheck2', order: 3, isVisible: true },
+  { title: 'المجموعات الطلابية', href: '/groups', icon: 'Users', order: 3.1, isVisible: true },
+  { title: 'المناقشة العامة', href: '/discussion', icon: 'MessageCircle', order: 3.2, isVisible: true },
+  { title: 'ساحة الألعاب 🎮', href: '/games', icon: 'Layers', order: 3.5, isVisible: true },
   { title: 'الامتحانات السابقة', href: '/files', icon: 'History', order: 4, isVisible: true },
   { title: 'من نحن', href: '/about', icon: 'Info', order: 5, isVisible: true },
   { title: 'دعم المنصة', href: '/contact', icon: 'ShieldCheck', order: 6, isVisible: true },
@@ -139,7 +143,7 @@ export const DEFAULT_FOOTER_COLUMNS = [
     isVisible: true,
     links: [
       { title: 'الرئيسية', href: '/', isVisible: true, order: 0, openInNewTab: false },
-      { title: 'المعادلات', href: '/sections', isVisible: true, order: 1, openInNewTab: false },
+      { title: 'المواد', href: '/sections', isVisible: true, order: 1, openInNewTab: false },
       { title: 'المواد الدراسية', href: '/subjects', isVisible: true, order: 2, openInNewTab: false },
       { title: 'الامتحانات التفاعلية', href: '/exams', isVisible: true, order: 3, openInNewTab: false },
     ],
@@ -170,9 +174,9 @@ export const DEFAULT_HOMEPAGE_LAYOUT = {
 };
 
 export const DEFAULT_SEO = {
-  siteTitle: 'معادلة برو | Moadla Pro — منصة تعليم امتحانات المعادلات المصرية',
-  metaDescription: 'المنصة التعليمية الأولى لتأهيل طلاب الدبلومات والمعاهد الفنية لاجتياز امتحانات معادلات كليات الهندسة والتجارة والزراعة والحقوق بأحدث الشروحات والامتحانات التفاعلية.',
-  keywords: 'معادلة كلية الهندسة, معادلة كلية التجارة, معادلة كلية الزراعة, امتحانات معادلة سابقة, شروحات معادلة الدبلومات',
+  siteTitle: 'معادلة برو | Moadla Pro — منصة تعليم امتحانات المواد المصرية',
+  metaDescription: 'المنصة التعليمية الأولى لتأهيل طلاب الدبلومات والمعاهد الفنية لاجتياز امتحانات المواد لكليات الهندسة والتجارة والزراعة والحقوق بأحدث الشروحات والامتحانات التفاعلية.',
+  keywords: 'معادلة كلية الهندسة, معادلة كلية التجارة, معادلة كلية الزراعة, امتحانات سابقة, شروحات المواد',
   ogImage: '',
   twitterHandle: '@moadlapro',
   googleSiteVerification: '',

@@ -44,46 +44,7 @@ export default async function ContactPage() {
         </div>
       </div>
 
-      {importedContactPage?.contentMarkdown && (
-        <div className="rounded-[28px] bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-soft text-right">
-          <h2 className="text-xl font-black text-slate-900 dark:text-white font-tajawal mb-4">
-            معلومات التواصل الرسمية
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400 whitespace-pre-line">
-            {importedContactPage.contentMarkdown}
-          </div>
-
-          <div className="mt-6 flex flex-wrap gap-3 justify-end">
-            <a
-              href="https://www.facebook.com/profile.php?id=100095629504638"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
-            >
-              <Facebook className="w-4 h-4" />
-              صفحة الفيسبوك
-            </a>
-            <a
-              href="https://www.moadla.com/Site/donate"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold"
-            >
-              <ExternalLink className="w-4 h-4" />
-              دعم الموقع
-            </a>
-            <a
-              href="https://www.moadla.com/Site/Website-rating"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-white text-xs font-bold"
-            >
-              <Phone className="w-4 h-4" />
-              تقييم الموقع
-            </a>
-          </div>
-        </div>
-      )}
+      {/* Contact details removed for students per request */}
     </div>
   );
 }
