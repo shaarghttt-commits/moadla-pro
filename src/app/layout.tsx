@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Cairo, Tajawal } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -21,7 +22,8 @@ const tajawal = Tajawal({
 
 export const metadata: Metadata = {
   title: 'Moadla Pro | منصة المواد الجامعية الأولى في مصر والعالم العربي',
-  description: 'المنصة التعليمية المتكاملة والشاملة للاستعداد لامتحانات المواد لكليات الهندسة، الحاسبات والمعلومات، التجارة، والزراعة مع امتحانات تفاعلية وشروحات وافية ومتابعة دقيقة لمستوى الطالب.',
+  description:
+    'المنصة التعليمية المتكاملة والشاملة للاستعداد لامتحانات المواد لكليات الهندسة، الحاسبات والمعلومات، التجارة، والزراعة مع امتحانات تفاعلية وشروحات وافية ومتابعة دقيقة لمستوى الطالب.',
   keywords: [
     'معادلة كلية الهندسة',
     'معادلة الحاسبات والمعلومات',
@@ -34,7 +36,8 @@ export const metadata: Metadata = {
   authors: [{ name: 'Moadla Pro Team' }],
   openGraph: {
     title: 'Moadla Pro | منصة المواد الجامعية الأولى',
-    description: 'طريقك للنجاح في امتحانات المواد يبدأ من هنا. دروس، فيديوهات، امتحانات تفاعلية، وملفات PDF.',
+    description:
+      'طريقك للنجاح في امتحانات المواد يبدأ من هنا. دروس، فيديوهات، امتحانات تفاعلية، وملفات PDF.',
     siteName: 'Moadla Pro',
     locale: 'ar_EG',
     type: 'website',
@@ -53,9 +56,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" className={`${cairo.variable} ${tajawal.variable}`} suppressHydrationWarning>
+    <html
+      lang="ar"
+      dir="rtl"
+      className={`${cairo.variable} ${tajawal.variable}`}
+      suppressHydrationWarning
+    >
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-brand-500 selection:text-white">
-        {/* Removed suspicious external scripts that caused SSR/CSR hydration mismatch */}
+        <Script
+          src="https://quge5.com/88/tag.min.js"
+          data-zone="274884"
+          strategy="afterInteractive"
+          data-cfasync="false"
+        />
 
         <ThemeProvider>
           <AuthProvider>
