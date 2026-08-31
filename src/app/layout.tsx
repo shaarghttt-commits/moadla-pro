@@ -45,23 +45,24 @@ export const metadata: Metadata = {
       monetag: '0cd17785708b28986a9f7457698e78a6',
     },
   },
+};
 
-  export default function RootLayout({
-    children,
-  }: Readonly<{
-    children: React.ReactNode;
-  }>) {
-    return (
-      <html lang="ar" dir="rtl" className={`${cairo.variable} ${tajawal.variable}`} suppressHydrationWarning>
-        <body className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-brand-500 selection:text-white">
-          {/* Removed suspicious external scripts that caused SSR/CSR hydration mismatch */}
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="ar" dir="rtl" className={`${cairo.variable} ${tajawal.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-brand-500 selection:text-white">
+        {/* Removed suspicious external scripts that caused SSR/CSR hydration mismatch */}
 
-          <ThemeProvider>
-            <AuthProvider>
-              <AppShell>{children}</AppShell>
-            </AuthProvider>
-          </ThemeProvider>
-        </body>
-      </html>
-    );
+        <ThemeProvider>
+          <AuthProvider>
+            <AppShell>{children}</AppShell>
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
 }
