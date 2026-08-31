@@ -100,11 +100,12 @@ export default async function ProfilePage(props: {
 
   return (
     <FacebookProfileView
-      user={{
+      profileUser={{
         ...user,
         friendsCount,
         friendshipStatus,
         friendRequestId,
+        createdAt: user.createdAt.toISOString(),
       }}
       currentUserId={currentUser?.id}
     />

@@ -89,16 +89,16 @@ export async function GET() {
       where: {
         OR: [
           { blockerId: currentUser.id },
-          { blockedId: currentUser.id },
+          { blockedUserId: currentUser.id },
         ],
       },
-      select: { blockerId: true, blockedId: true },
+      select: { blockerId: true, blockedUserId: true },
     });
 
     const blockedSet = new Set<string>();
     userBlocks.forEach((b) => {
       blockedSet.add(b.blockerId);
-      blockedSet.add(b.blockedId);
+      blockedSet.add(b.blockedUserId);
     });
 
     const filteredSuggestions = suggestions

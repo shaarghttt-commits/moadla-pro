@@ -103,7 +103,6 @@ export async function POST(
           title: 'دعوة لمذاكرة حية جماعية 🎧📹',
           message: `دعاك زميلك ${user.name} للانضمام إلى غرفة المذاكرة الحية "${room.name}" للمذاكرة معاً بالصوت والفيديو!`,
           link: `/study-rooms?roomId=${room.id}`,
-          type: 'SYSTEM',
         },
       });
 

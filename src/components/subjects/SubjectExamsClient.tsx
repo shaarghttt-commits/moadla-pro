@@ -32,6 +32,7 @@ export interface YearExamPackage {
   title: string;
   subtitle?: string;
   badge?: string;
+  type?: string;
   versions: ExamVersionItem[];
   videoSolution?: {
     instructor: string;
@@ -1894,15 +1895,15 @@ export default function SubjectExamsClient({ subject, diskFiles = [] }: SubjectE
                               name: exam.videoSolution!.instructor,
                               title: `فيديو حل امتحان ${exam.title}`,
                               channelName: exam.videoSolution!.instructor,
-                              channelUrl: `https://www.youtube.com/watch?v=${exam.videoSolution!.youtubeEmbedId}`,
-                              playlistUrl: `https://www.youtube.com/watch?v=${exam.videoSolution!.youtubeEmbedId}`,
+                              channelUrl: `https://www.youtube.com/watch?v=${exam.videoSolution!.youtubeId}`,
+                              playlistUrl: `https://www.youtube.com/watch?v=${exam.videoSolution!.youtubeId}`,
                               specialty: `حل مفصل لجميع أسئلة امتحان ${exam.year} مع استعراض خطوات الحل الرياضية.`,
                               isPopular: true,
                               videos: [
                                 {
                                   id: `exam-${exam.year}`,
                                   title: `حل امتحان ${exam.title}`,
-                                  youtubeEmbedId: exam.videoSolution!.youtubeEmbedId,
+                                  youtubeEmbedId: exam.videoSolution!.youtubeId,
                                   chapter: `حل امتحان ${exam.year}`,
                                   duration: exam.videoSolution!.duration || '1 ساعة',
                                   notes: 'حل نموذجي لجميع أسئلة الامتحان بالخطوات.',
@@ -1917,7 +1918,7 @@ export default function SubjectExamsClient({ subject, diskFiles = [] }: SubjectE
                         </button>
 
                         <a
-                          href={exam.videoSolution.youtubeEmbedId ? `https://www.youtube.com/watch?v=${exam.videoSolution.youtubeEmbedId}` : 'https://www.youtube.com'}
+                          href={exam.videoSolution.youtubeId ? `https://www.youtube.com/watch?v=${exam.videoSolution.youtubeId}` : 'https://www.youtube.com'}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2.5 rounded-xl bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 hover:bg-red-100 transition"

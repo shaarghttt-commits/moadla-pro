@@ -182,10 +182,10 @@ export default async function ExamResultsPage({ params }: PageProps) {
         </h2>
 
         <div className="space-y-6">
-          {exam.questions.map((question, qIdx) => {
+          {exam.questions.map((question: any, qIdx: number) => {
             const userAnswer = answersMap.get(question.id);
             const isCorrect = userAnswer?.isCorrect ?? false;
-            const correctChoice = question.choices.find((c) => c.isCorrect);
+            const correctChoice = question.choices.find((c: any) => c.isCorrect);
 
             return (
               <div
@@ -235,7 +235,7 @@ export default async function ExamResultsPage({ params }: PageProps) {
 
                 {/* Choices breakdown */}
                 <div className="space-y-2.5">
-                  {question.choices.map((choice) => {
+                  {question.choices.map((choice: any) => {
                     const isUserPick = userAnswer?.selectedChoiceId === choice.id;
                     const isTheCorrectOne = choice.isCorrect;
 

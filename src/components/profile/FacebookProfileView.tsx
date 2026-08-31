@@ -63,9 +63,10 @@ interface ProfileUser {
 
 interface FacebookProfileViewProps {
   profileUser: ProfileUser;
+  currentUserId?: string;
 }
 
-export default function FacebookProfileView({ profileUser: initialUser }: FacebookProfileViewProps) {
+export default function FacebookProfileView({ profileUser: initialUser, currentUserId: _currentUserId }: FacebookProfileViewProps) {
   const { user: currentUser, updateUser } = useAuth();
   const [profileUser, setProfileUser] = useState<ProfileUser>(initialUser);
   const [activeTab, setActiveTab] = useState<'timeline' | 'stories' | 'photos' | 'friends' | 'achievements'>('timeline');
